@@ -1,4 +1,5 @@
-<image src="./logo.png" width="100" height="100" />
+<img src="./logo.png" width="100" height="100" />
+
 # 🏆 Schrum - Agile Project Management Tool  
 
 Schrum is a powerful project management app designed for Scrum teams. It helps track progress, manage sprints, and improve collaboration. 🚀  
