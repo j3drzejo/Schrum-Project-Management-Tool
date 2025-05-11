@@ -25,7 +25,6 @@ export class TeamInviteController {
     @Param('inviteId') inviteId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    console.log(req.user.userId);
     return this.teamInviteService.acceptInvite(+inviteId, req.user.userId);
   }
 }

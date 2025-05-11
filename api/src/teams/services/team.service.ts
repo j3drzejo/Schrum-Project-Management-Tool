@@ -38,7 +38,23 @@ export class TeamService {
     return this.teamRepo.save(team);
   }
 
-  async update(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
+  async update(
+    id: number,
+    updateTeamDto: UpdateTeamDto,
+    userId: number,
+  ): Promise<Team> {
+    const checkIfUserInTeam = await this.teamRepo.findOne({
+      where: {
+        id: id,
+        users: { id: userId },
+      },
+      relations: ['users'],
+    });
+
+    if (!checkIfUserInTeam) {
+      throw new NotFoundException('User not found in the team');
+    }
+
     const team = await this.teamRepo.preload({ id, ...updateTeamDto });
     if (!team) {
       throw new NotFoundException(`Team #${id} not found`);
@@ -46,7 +62,19 @@ export class TeamService {
     return this.teamRepo.save(team);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, userId: number): Promise<void> {
+    const checkIfUserInTeam = await this.teamRepo.findOne({
+      where: {
+        id: id,
+        users: { id: userId },
+      },
+      relations: ['users'],
+    });
+
+    if (!checkIfUserInTeam) {
+      throw new NotFoundException('User not found in the team');
+    }
+
     const team = await this.teamRepo.findOne({ where: { id } });
     if (!team) {
       throw new NotFoundException(`Team #${id} not found`);

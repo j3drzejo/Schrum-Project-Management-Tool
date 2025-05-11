@@ -39,13 +39,17 @@ export class TeamController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
-    return this.teamService.update(+id, updateTeamDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateTeamDto: UpdateTeamDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.teamService.update(+id, updateTeamDto, req.user.userId);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.teamService.remove(+id);
+  async remove(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    await this.teamService.remove(+id, req.user.userId);
     return { deleted: true };
   }
 
