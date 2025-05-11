@@ -11,6 +11,7 @@ import {
 import { TeamService } from '../services/team.service';
 import { TeamInviteService } from '../services/teamInvite.service';
 import { CreateTeamDto, UpdateTeamDto, InviteUserDto } from '../dtos/index.dto';
+import { AuthenticatedRequest } from 'src/types';
 
 @Controller('teams')
 export class TeamController {
@@ -30,7 +31,10 @@ export class TeamController {
   }
 
   @Post()
-  async create(@Body() createTeamDto: CreateTeamDto, @Req() req: any) {
+  async create(
+    @Body() createTeamDto: CreateTeamDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
     return this.teamService.create(createTeamDto, req.user.userId);
   }
 
@@ -49,7 +53,7 @@ export class TeamController {
   async invite(
     @Param('teamId') teamId: string,
     @Body() inviteUserDto: InviteUserDto,
-    @Req() req: any,
+    @Req() req: AuthenticatedRequest,
   ) {
     return this.teamInviteService.inviteUser(
       +teamId,

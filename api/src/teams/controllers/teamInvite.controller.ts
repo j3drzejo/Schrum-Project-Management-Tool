@@ -1,6 +1,7 @@
 import { Controller, Post, Param, Body, Req } from '@nestjs/common';
 import { TeamInviteService } from '../services/teamInvite.service';
 import { InviteUserDto } from '../dtos/inviteUser.dto';
+import { AuthenticatedRequest } from 'src/types';
 
 @Controller('teams/invites')
 export class TeamInviteController {
@@ -10,7 +11,7 @@ export class TeamInviteController {
   invite(
     @Param('teamId') teamId: string,
     @Body() inviteUserDto: InviteUserDto,
-    @Req() req: any,
+    @Req() req: AuthenticatedRequest,
   ) {
     return this.teamInviteService.inviteUser(
       +teamId,
@@ -20,7 +21,10 @@ export class TeamInviteController {
   }
 
   @Post(':inviteId/accept')
-  async accept(@Param('inviteId') inviteId: string, @Req() req: any) {
+  async accept(
+    @Param('inviteId') inviteId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
     console.log(req.user.userId);
     return this.teamInviteService.acceptInvite(+inviteId, req.user.userId);
   }

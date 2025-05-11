@@ -13,7 +13,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { LoginDto } from './dtos/login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './public.decorator';
-
+import { AuthenticatedRequest, LocalAuthRequest } from 'src/types';
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('auth')
 export class AuthController {
@@ -28,18 +28,19 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() dto: LoginDto, @Request() req) {
+  async login(@Body() dto: LoginDto, @Request() req: LocalAuthRequest) {
+    console.log(req.user);
     return this.authService.login(req.user);
   }
 
   @Post('logout')
-  async logout(@Request() req) {
+  async logout(@Request() req: AuthenticatedRequest) {
     await this.authService.logout(req.user.jti);
     return { message: 'Logged out successfully' };
   }
 
   @Get('profile')
-  profile(@Request() req) {
+  profile(@Request() req: AuthenticatedRequest) {
     return req.user;
   }
 }
