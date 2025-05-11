@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { TaskLabel } from './task-label.entity';
+import { TaskLabel } from 'src/typeORM';
 
 @Entity()
 export class Label {

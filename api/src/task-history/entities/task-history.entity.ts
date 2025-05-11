@@ -5,9 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
 } from 'typeorm';
-import { Task } from '../tasks/task.entity';
-import { User } from '../users/user.entity';
-import { BoardColumn } from '../boards/board-column.entity';
+import { Task, User, BoardColumn } from 'src/typeORM';
 
 @Entity()
 export class TaskHistory {

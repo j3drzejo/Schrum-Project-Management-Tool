@@ -7,13 +7,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Project } from '../projects/project.entity';
-import { Sprint } from '../sprints/sprint.entity';
-import { User } from '../users/user.entity';
-import { BoardColumn } from '../boards/board-column.entity';
-import { Comment } from '../comments/comment.entity';
-import { TaskHistory } from '../task-history/task-history.entity';
-import { TaskLabel } from '../labels/task-label.entity';
+import {
+  Project,
+  Sprint,
+  User,
+  BoardColumn,
+  Comment,
+  TaskHistory,
+  TaskLabel,
+} from 'src/typeORM';
 
 @Entity()
 export class Task {

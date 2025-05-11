@@ -7,9 +7,7 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Project } from '../projects/project.entity';
-import { Board } from '../boards/board.entity';
-import { Task } from '../tasks/task.entity';
+import { Project, Board, Task } from 'src/typeORM';
 
 @Entity()
 export class Sprint {

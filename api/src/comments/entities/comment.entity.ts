@@ -7,8 +7,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { Task } from '../tasks/task.entity';
-import { User } from '../users/user.entity';
+import { Task, User } from 'src/typeORM';
 
 @Entity()
 export class Comment {

@@ -4,6 +4,7 @@ sample/**/package-lock.json
 # dependencies
 node_modules/
 *.db
+/dist
 
 # IDE
 /.idea

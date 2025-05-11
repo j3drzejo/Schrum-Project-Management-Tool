@@ -5,8 +5,7 @@ import {
   OneToOne,
   OneToMany,
 } from 'typeorm';
-import { Sprint } from '../sprints/sprint.entity';
-import { BoardColumn } from './board-column.entity';
+import { Sprint, BoardColumn } from 'src/typeORM';
 
 @Entity()
 export class Board {

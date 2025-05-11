@@ -5,10 +5,14 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Team } from '../teams/team.entity';
-import { Task } from '../tasks/task.entity';
-import { Comment } from '../comments/comment.entity';
-import { TaskHistory } from '../task-history/task-history.entity';
+import {
+  Team,
+  Task,
+  Comment,
+  TaskHistory,
+  AccessToken,
+  TeamInvite,
+} from 'src/typeORM';
 
 @Entity()
 export class User {
@@ -38,4 +42,13 @@ export class User {
 
   @OneToMany(() => TaskHistory, (history) => history.user)
   histories: TaskHistory[];
+
+  @OneToMany(() => AccessToken, (a) => a.user)
+  accessTokens: AccessToken[];
+
+  @OneToMany(() => TeamInvite, (invite) => invite.invitedUser)
+  invites: TeamInvite[];
+
+  @OneToMany(() => TeamInvite, (invite) => invite.invitedBy)
+  sentInvites: TeamInvite[];
 }

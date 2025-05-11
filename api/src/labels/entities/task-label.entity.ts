@@ -1,6 +1,5 @@
 import { Entity, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
-import { Task } from '../tasks/task.entity';
-import { Label } from './label.entity';
+import { Task, Label } from 'src/typeORM';
 
 @Entity()
 export class TaskLabel {

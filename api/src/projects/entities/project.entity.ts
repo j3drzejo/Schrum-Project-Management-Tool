@@ -5,9 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Team } from '../teams/team.entity';
-import { Sprint } from '../sprints/sprint.entity';
-import { Task } from '../tasks/task.entity';
+import { Team, Sprint, Task } from 'src/typeORM';
 
 @Entity()
 export class Project {

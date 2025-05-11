@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersController } from './users/controllers/users/users.controller';
-import { UsersService } from './users/services/users/users.service';
+import { UsersController } from './users/controllers/users.controller';
+import { UsersService } from './users/services/users.service';
 import { UsersModule } from './users/users.module';
 import { TeamsModule } from './teams/teams.module';
 import { SprintsModule } from './sprints/sprints.module';
@@ -11,6 +11,8 @@ import { BoardsModule } from './boards/boards.module';
 import { TaskHistoryModule } from './task-history/task-history.module';
 import { LabelsModule } from './labels/labels.module';
 import { CommentsModule } from './comments/comments.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import entities from './typeORM';
 @Module({
@@ -21,6 +23,10 @@ import entities from './typeORM';
       synchronize: true,
       entities,
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env', // adjust if your file is named differently
+    }),
     UsersModule,
     TeamsModule,
     SprintsModule,
@@ -30,6 +36,7 @@ import entities from './typeORM';
     TaskHistoryModule,
     LabelsModule,
     CommentsModule,
+    AuthModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

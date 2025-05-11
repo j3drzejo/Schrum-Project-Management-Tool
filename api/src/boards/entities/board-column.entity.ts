@@ -5,7 +5,7 @@ import {
   ManyToOne,
   Check,
 } from 'typeorm';
-import { Board } from './board.entity';
+import { Board } from 'src/typeORM';
 
 const STATUSES = [
   'ready',
