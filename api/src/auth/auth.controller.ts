@@ -9,8 +9,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dtos/register.dto';
-import { LoginDto } from './dtos/login.dto';
+import { RegisterDto, LoginDto } from './dtos';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './public.decorator';
 import { AuthenticatedRequest, LocalAuthRequest } from 'src/types';

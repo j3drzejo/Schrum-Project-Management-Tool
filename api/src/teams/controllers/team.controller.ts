@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { TeamService } from '../services/team.service';
 import { TeamInviteService } from '../services/teamInvite.service';
-import { CreateTeamDto, UpdateTeamDto, InviteUserDto } from '../dtos/index.dto';
+import { CreateTeamDto, UpdateTeamDto, InviteUserDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
 
 @Controller('teams')

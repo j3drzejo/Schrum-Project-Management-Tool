@@ -1,15 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from 'src/typeORM';
 import {
   CreateTaskDto,
   UpdateTaskDto,
   AssignUserDto,
   MoveTaskDto,
 } from '../dtos';
-import { TaskHistory } from 'src/typeORM';
-import { User, BoardColumn } from 'src/typeORM';
+import { User, BoardColumn, TaskHistory, Task } from 'src/typeORM';
 
 @Injectable()
 export class TasksService {
