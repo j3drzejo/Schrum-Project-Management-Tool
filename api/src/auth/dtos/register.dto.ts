@@ -13,7 +13,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'Email address for login and communication',
-    example: 'jane.doe@example.com',
+    example: 'user@example.com',
     format: 'email',
   })
   @IsEmail({}, { message: 'Please provide a valid email address' })
@@ -21,7 +21,7 @@ export class RegisterDto {
 
   @ApiProperty({
     description: 'Password with at least one letter and one number',
-    example: 'pa55word123',
+    example: 'strongPassword123!',
     format: 'password',
     minLength: 8,
     pattern: '(?=.*[0-9])(?=.*[A-Za-z]).*',
