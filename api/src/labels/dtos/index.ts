@@ -1,4 +1,4 @@
-import { CreateLabelDto } from './createLabel.dto';
-import { UpdateLabelDto } from './updateLabel.dto';
+import { CreateLabelDto } from './create-label.dto';
+import { UpdateLabelDto } from './update-label.dto';
 
 export { CreateLabelDto, UpdateLabelDto };

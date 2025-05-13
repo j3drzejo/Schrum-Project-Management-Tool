@@ -8,7 +8,7 @@ import { SprintsModule } from './sprints/sprints.module';
 import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
 import { BoardsModule } from './boards/boards.module';
-import { TaskHistoryModule } from './task-history/task-history.module';
+import { TaskHistoryModule } from './taskHistory/task-history.module';
 import { LabelsModule } from './labels/labels.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
@@ -25,7 +25,7 @@ import entities from './typeORM';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env', // adjust if your file is named differently
+      envFilePath: '.env',
     }),
     UsersModule,
     TeamsModule,

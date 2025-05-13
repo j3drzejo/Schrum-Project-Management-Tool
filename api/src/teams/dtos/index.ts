@@ -1,5 +1,5 @@
-import { CreateTeamDto } from './createTeam.dto';
-import { UpdateTeamDto } from './updateTeam.dto';
-import { InviteUserDto } from './inviteUser.dto';
+import { CreateTeamDto } from './create-team.dto';
+import { UpdateTeamDto } from './update-team.dto';
+import { InviteUserDto } from './invite-user.dto';
 
 export { CreateTeamDto, UpdateTeamDto, InviteUserDto };

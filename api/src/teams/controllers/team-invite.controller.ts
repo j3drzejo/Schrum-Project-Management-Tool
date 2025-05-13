@@ -1,5 +1,5 @@
 import { Controller, Post, Param, Body, Req } from '@nestjs/common';
-import { TeamInviteService } from '../services/teamInvite.service';
+import { TeamInviteService } from '../services/team-invite.service';
 import { InviteUserDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
 

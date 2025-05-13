@@ -1,4 +1,4 @@
-import { AuthenticatedRequest } from './authenticatedRequest';
-import { LocalAuthRequest } from './localAuthRequest';
+import { AuthenticatedRequest } from './authenticated-request';
+import { LocalAuthRequest } from './local-auth-request';
 
 export { AuthenticatedRequest, LocalAuthRequest };

@@ -18,7 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterDto): Promise<{ message: string }> {
     if (!dto) {
       throw new BadRequestException('No registration data provided.');
     }
@@ -47,7 +47,7 @@ export class AuthService {
     });
 
     await this.userRepository.save(user);
-    return user;
+    return { message: 'User registered successfully' };
   }
 
   async validateUser(email: string, pass: string): Promise<User> {

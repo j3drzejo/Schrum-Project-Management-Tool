@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTeamDto } from '../dtos/createTeam.dto';
-import { UpdateTeamDto } from '../dtos/updateTeam.dto';
+import { CreateTeamDto } from '../dtos/create-team.dto';
+import { UpdateTeamDto } from '../dtos/update-team.dto';
 import { Team, User } from 'src/typeORM';
 
 @Injectable()

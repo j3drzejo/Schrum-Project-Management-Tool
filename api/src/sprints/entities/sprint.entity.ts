@@ -17,10 +17,10 @@ export class Sprint {
   @Column()
   name: string;
 
-  @Column({ type: 'date' })
+  @Column()
   startDate: string;
 
-  @Column({ type: 'date' })
+  @Column()
   endDate: string;
 
   @ManyToOne(() => Project, (project) => project.sprints)

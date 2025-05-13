@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { TeamService } from '../services/team.service';
-import { TeamInviteService } from '../services/teamInvite.service';
+import { TeamInviteService } from '../services/team-invite.service';
 import { CreateTeamDto, UpdateTeamDto, InviteUserDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
 
