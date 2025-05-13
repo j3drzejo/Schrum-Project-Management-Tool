@@ -7,13 +7,10 @@ import {
   Put,
   Delete,
   ParseIntPipe,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ProjectsService } from '../services/projects.service';
 import { CreateProjectDto, UpdateProjectDto } from '../dtos';
 
-@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller()
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}

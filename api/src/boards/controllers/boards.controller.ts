@@ -5,13 +5,10 @@ import {
   Put,
   Body,
   ParseIntPipe,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { BoardsService } from '../services/boards.service';
 import { UpdateBoardDto } from '../dtos';
 
-@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller()
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}

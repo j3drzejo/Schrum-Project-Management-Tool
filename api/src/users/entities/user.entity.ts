@@ -29,7 +29,7 @@ export class User {
   password: string;
 
   @ManyToOne(() => Team, (team) => team.users)
-  team: Team;
+  team: Team | null;
 
   @OneToMany(() => Task, (task) => task.assignedUser)
   assignedTasks: Task[];

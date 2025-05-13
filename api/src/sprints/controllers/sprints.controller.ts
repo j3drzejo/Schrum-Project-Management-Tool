@@ -7,14 +7,11 @@ import {
   Param,
   Body,
   ParseIntPipe,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 
 import { SprintsService } from '../services/sprints.service';
 import { CreateSprintDto, UpdateSprintDto } from '../dtos';
 
-@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller()
 export class SprintsController {
   constructor(private readonly sprintsService: SprintsService) {}

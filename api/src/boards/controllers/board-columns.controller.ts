@@ -7,13 +7,10 @@ import {
   Param,
   Body,
   ParseIntPipe,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { BoardColumnsService } from '../services/board-columns.service';
 import { UpdateBoardColumnDto, CreateBoardColumnDto } from '../dtos';
 
-@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller()
 export class BoardColumnsController {
   constructor(private readonly colsService: BoardColumnsService) {}
