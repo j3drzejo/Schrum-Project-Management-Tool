@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { Team, User, TeamInvite } from 'src/typeORM';
 
 @Injectable()
@@ -43,9 +42,13 @@ export class TeamInviteService {
 
     const inviter = await this.userRepo.findOne({
       where: { id: inviterId },
-      relations: ['team'],
+      relations: ['teams'],
     });
-    if (!inviter || inviter.team?.id !== team.id) {
+
+    const isInviterInTeam = inviter?.teams?.some(
+      (userTeam) => userTeam.id === team.id,
+    );
+    if (!inviter || !isInviterInTeam) {
       throw new ForbiddenException('Only team members can invite others');
     }
 
@@ -66,7 +69,6 @@ export class TeamInviteService {
       invitedBy: inviter,
       accepted: false,
     });
-
     return this.inviteRepo.save(invite);
   }
 
@@ -78,27 +80,30 @@ export class TeamInviteService {
     if (!invite) {
       throw new NotFoundException(`Invite #${inviteId} not found`);
     }
+
     if (invite.invitedUser.id !== userId) {
       throw new ForbiddenException(
         'You are not authorized to accept this invite',
       );
     }
+
     if (invite.accepted) {
       throw new BadRequestException('Invite already accepted');
     }
 
     const user = await this.userRepo.findOne({
       where: { id: userId },
-      relations: ['team'],
+      relations: ['teams'],
     });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    if (user.team) {
+
+    if (user.teams && user.teams.length > 0) {
       throw new BadRequestException('User already belongs to a team');
     }
 
-    user.team = invite.team;
+    user.teams = [invite.team];
     invite.accepted = true;
 
     await this.userRepo.save(user);

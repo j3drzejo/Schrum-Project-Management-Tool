@@ -4,6 +4,7 @@ import LoginView from './views/Auth/LoginView';
 import RegisterView from './views/Auth/RegisterView';
 import ProtectedRoute from './routes/ProtectedRoute';
 import UnprotectedRoute from './routes/UnprotectedRoute';
+import { SidebarProvider } from './contexts/SidebarContext';
 
 function App() {
   return (
@@ -20,9 +21,11 @@ function App() {
           </UnprotectedRoute>} />
 
         <Route path="/" element={
-          <ProtectedRoute>
-            <HomeView />
-          </ProtectedRoute>
+          //<ProtectedRoute>
+            <SidebarProvider>
+              <HomeView/>
+            </SidebarProvider>
+          //</ProtectedRoute>
         } />
       </Routes>
     </Router>

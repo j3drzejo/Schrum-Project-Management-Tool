@@ -6,9 +6,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-
 import { User, Team } from 'src/typeORM';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,13 +17,13 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.usersRepo.find({ relations: ['team'] });
+    return this.usersRepo.find({ relations: ['teams'] });
   }
 
   async findOne(id: number): Promise<User> {
     const user = await this.usersRepo.findOne({
       where: { id },
-      relations: ['team'],
+      relations: ['teams'],
     });
     if (!user) throw new NotFoundException(`User #${id} not found`);
     return user;
@@ -35,14 +35,15 @@ export class UsersService {
     if (existing) {
       throw new BadRequestException('Email already in use');
     }
-
     const user = this.usersRepo.create({ name, email });
     user.password = await bcrypt.hash(password, 12);
 
     if (teamId !== undefined) {
       const team = await this.teamRepo.findOneBy({ id: teamId });
       if (!team) throw new NotFoundException(`Team #${teamId} not found`);
-      user.team = team;
+      user.teams = [team];
+    } else {
+      user.teams = [];
     }
 
     return this.usersRepo.save(user);
@@ -52,6 +53,17 @@ export class UsersService {
     const user = await this.usersRepo.preload({ id });
     if (!user) throw new NotFoundException(`User #${id} not found`);
 
+    const fullUser = await this.usersRepo.findOne({
+      where: { id },
+      relations: ['teams'],
+    });
+
+    if (!fullUser) {
+      throw new NotFoundException(`User #${id} not found`);
+    }
+
+    user.teams = fullUser.teams;
+
     if (dto.email && dto.email !== user.email) {
       const conflict = await this.usersRepo.findOne({
         where: { email: dto.email },
@@ -59,17 +71,20 @@ export class UsersService {
       if (conflict) throw new BadRequestException('Email already in use');
       user.email = dto.email;
     }
+
     if (dto.name) user.name = dto.name;
+
     if (dto.password) {
       user.password = await bcrypt.hash(dto.password, 12);
     }
+
     if (dto.teamId !== undefined) {
       if (dto.teamId === null) {
-        user.team = null;
+        user.teams = [];
       } else {
         const team = await this.teamRepo.findOneBy({ id: dto.teamId });
         if (!team) throw new NotFoundException(`Team #${dto.teamId} not found`);
-        user.team = team;
+        user.teams = [team];
       }
     }
 

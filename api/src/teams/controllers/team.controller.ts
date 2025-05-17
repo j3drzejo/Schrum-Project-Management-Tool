@@ -21,7 +21,12 @@ export class TeamController {
   ) {}
 
   @Get()
-  async findAll() {
+  async findAll(@Req() req: AuthenticatedRequest) {
+    return this.teamService.findUserTeams(req.user.userId);
+  }
+
+  @Get('all')
+  async findAllTeams() {
     return this.teamService.findAll();
   }
 

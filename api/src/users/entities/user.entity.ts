@@ -2,8 +2,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import {
   Team,
@@ -28,8 +29,9 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToOne(() => Team, (team) => team.users)
-  team: Team | null;
+  @ManyToMany(() => Team, (team: Team) => team.users)
+  @JoinTable()
+  teams: Team[];
 
   @OneToMany(() => Task, (task) => task.assignedUser)
   assignedTasks: Task[];

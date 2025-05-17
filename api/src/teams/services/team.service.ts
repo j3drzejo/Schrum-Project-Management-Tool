@@ -17,6 +17,15 @@ export class TeamService {
     return this.teamRepo.find({ relations: ['users'] });
   }
 
+  async findUserTeams(userId: number): Promise<Team[]> {
+    return this.teamRepo.find({
+      where: {
+        users: { id: userId },
+      },
+      relations: ['users', 'projects'],
+    });
+  }
+
   async findOne(id: number): Promise<Team> {
     const team = await this.teamRepo.findOne({
       where: { id },
