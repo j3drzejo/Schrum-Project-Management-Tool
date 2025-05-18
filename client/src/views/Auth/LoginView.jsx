@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
-import { 
-  TextField, 
-  Button, 
-  Box, 
-  Typography, 
-  Avatar, 
-  InputAdornment, 
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Avatar,
+  InputAdornment,
   IconButton,
   FormControl,
   CircularProgress,
   Paper,
   Tooltip,
   Snackbar,
-  Alert
+  Alert,
 } from '@mui/material';
 import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom';
@@ -56,7 +56,10 @@ export default function LoginView() {
   };
 
   const isFormValid = () =>
-    form.email && validateEmail(form.email) && form.password && form.password.length >= 6;
+    form.email &&
+    validateEmail(form.email) &&
+    form.password &&
+    form.password.length >= 6;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,7 +92,8 @@ export default function LoginView() {
         alignItems="center"
         minHeight="100vh"
         sx={{
-          background: 'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
+          background:
+            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
         }}
       >
         <CircularProgress size={48} sx={{ color: '#F4A7B9' }} />
@@ -137,7 +141,12 @@ export default function LoginView() {
           }}
         />
 
-        <Typography variant="h4" align="center" fontWeight="bold" sx={{ color: '#F4A7B9' }}>
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight="bold"
+          sx={{ color: '#F4A7B9' }}
+        >
           Welcome Back
         </Typography>
 
@@ -155,7 +164,11 @@ export default function LoginView() {
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Email sx={{ color: formErrors.email ? 'error.main' : '#F4A7B9' }} />
+                    <Email
+                      sx={{
+                        color: formErrors.email ? 'error.main' : '#F4A7B9',
+                      }}
+                    />
                   </InputAdornment>
                 ),
               },
@@ -179,19 +192,28 @@ export default function LoginView() {
             value={form.password}
             onChange={(e) => {
               setForm({ ...form, password: e.target.value });
-              if (formErrors.password) setFormErrors({ ...formErrors, password: '' });
+              if (formErrors.password)
+                setFormErrors({ ...formErrors, password: '' });
             }}
             slotProps={{
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Lock sx={{ color: formErrors.password ? 'error.main' : '#F4A7B9' }} />
+                    <Lock
+                      sx={{
+                        color: formErrors.password ? 'error.main' : '#F4A7B9',
+                      }}
+                    />
                   </InputAdornment>
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
                     <Tooltip title={passwordHint}>
-                      <IconButton onClick={handleClickShowPassword} edge="end" aria-label="toggle password visibility">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </Tooltip>
@@ -268,8 +290,17 @@ export default function LoginView() {
         </Typography>
       </Paper>
 
-      <Snackbar open={showAlert} autoHideDuration={6000} onClose={handleAlertClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-        <Alert onClose={handleAlertClose} severity="error" sx={{ width: '100%' }}>
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
           {error || 'An error occurred during login.'}
         </Alert>
       </Snackbar>

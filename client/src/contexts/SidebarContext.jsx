@@ -7,7 +7,7 @@ const SidebarContext = createContext(null);
 // Create a provider component
 export function SidebarProvider({ children }) {
   const sidebarViewModel = useSidebarViewModel();
-  
+
   return (
     <SidebarContext.Provider value={sidebarViewModel}>
       {children}

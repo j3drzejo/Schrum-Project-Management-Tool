@@ -10,23 +10,34 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={
-          <UnprotectedRoute>
-            <LoginView />
-          </UnprotectedRoute>} />
+        <Route
+          path="/login"
+          element={
+            <UnprotectedRoute>
+              <LoginView />
+            </UnprotectedRoute>
+          }
+        />
 
-        <Route path="/register" element={
-          <UnprotectedRoute> 
-            <RegisterView /> 
-          </UnprotectedRoute>} />
+        <Route
+          path="/register"
+          element={
+            <UnprotectedRoute>
+              <RegisterView />
+            </UnprotectedRoute>
+          }
+        />
 
-        <Route path="/" element={
-          //<ProtectedRoute>
+        <Route
+          path="/"
+          element={
+            //<ProtectedRoute>
             <SidebarProvider>
-              <HomeView/>
+              <HomeView />
             </SidebarProvider>
-          //</ProtectedRoute>
-        } />
+            //</ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

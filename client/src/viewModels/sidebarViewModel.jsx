@@ -9,11 +9,11 @@ export function useSidebarViewModel() {
   const [activeProject, setActiveProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Add Member flows
   const [inviteOpen, setInviteOpen] = useState(false);
   const [userQuery, setUserQuery] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [receivedInvites, setReceivedInvites] = useState([]);
 
   useEffect(() => {
     async function init() {
@@ -25,12 +25,9 @@ export function useSidebarViewModel() {
         ]);
         setUser(userInfo);
         setTeams(teamList);
-        
-        if (teamList.length > 0) {
-          setCurrentTeam(teamList[0]);
-        }
+        if (teamList.length > 0) setCurrentTeam(teamList[0]);
       } catch (error) {
-        console.error("Failed to initialize sidebar:", error);
+        console.error('Failed to initialize sidebar:', error);
       } finally {
         setLoading(false);
       }
@@ -44,14 +41,12 @@ export function useSidebarViewModel() {
         try {
           const projectList = await sidebarService.getProjects(currentTeam.id);
           setProjects(projectList);
-          
-          // Set the active project to the first regular project (not '+ New Project')
-          const firstRegularProject = projectList.find(p => p !== "+ New Project");
-          if (firstRegularProject) {
-            setActiveProject(firstRegularProject);
-          }
+          const firstRegularProject = projectList.find(
+            (p) => p !== '+ New Project',
+          );
+          if (firstRegularProject) setActiveProject(firstRegularProject);
         } catch (error) {
-          console.error("Failed to load projects:", error);
+          console.error('Failed to load projects:', error);
           setProjects([]);
           setActiveProject(null);
         }
@@ -60,32 +55,28 @@ export function useSidebarViewModel() {
     loadProjects();
   }, [currentTeam]);
 
-  const changeTeam = async (team) => {
-    setCurrentTeam(team);
-    setActiveProject(null); // Reset active project when changing team
-  };
-
-  // Invite flows
-  const openInvite = () => setInviteOpen(true);
-  const closeInvite = () => { 
-    setInviteOpen(false); 
-    setUserQuery(''); 
-    setUserResults([]); 
-  };
-
-  const searchUsers = async (query) => {
-    setUserQuery(query);
-    if (query.length < 2) {
-      setUserResults([]);
-    } else {
+  useEffect(() => {
+    async function loadInvites() {
       try {
-        const res = await sidebarService.getUsers(query);
-        setUserResults(res);
+        const invites = await sidebarService.getInvites();
+        setReceivedInvites(invites);
       } catch (error) {
-        console.error("Failed to search users:", error);
-        setUserResults([]);
+        console.error('Failed to load invites:', error);
       }
     }
+    loadInvites();
+  }, []);
+
+  const changeTeam = async (team) => {
+    setCurrentTeam(team);
+    setActiveProject(null);
+  };
+
+  const openInvite = () => setInviteOpen(true);
+  const closeInvite = () => {
+    setInviteOpen(false);
+    setUserQuery('');
+    setUserResults([]);
   };
 
   const inviteUser = async (userId) => {
@@ -94,15 +85,40 @@ export function useSidebarViewModel() {
       await sidebarService.addUserToTeam(currentTeam.id, userId);
       closeInvite();
     } catch (error) {
-      console.error("Failed to invite user:", error);
+      console.error('Failed to invite user:', error);
     } finally {
       setInviteLoading(false);
     }
   };
 
-  const createNewProject = () => {
-    // This would typically open a dialog or navigate to a new project creation page
-    console.error("Create new project for team:", currentTeam?.name);
+  const searchUsers = async (query) => {
+    setUserQuery(query);
+    const results = await sidebarService.getUsers(query);
+    setUserResults(results);
+  };
+
+  const createTeam = async (name) => {
+    const newTeam = { id: Date.now(), name };
+    setTeams((prev) => [...prev, newTeam]);
+    setCurrentTeam(newTeam);
+  };
+
+  const acceptInvite = async (inviteId) => {
+    try {
+      await sidebarService.acceptInvite(inviteId);
+      setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
+    } catch (error) {
+      console.error('Failed to accept invite:', error);
+    }
+  };
+
+  const declineInvite = async (inviteId) => {
+    try {
+      await sidebarService.declineInvite(inviteId);
+      setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
+    } catch (error) {
+      console.error('Failed to decline invite:', error);
+    }
   };
 
   return {
@@ -114,15 +130,17 @@ export function useSidebarViewModel() {
     setActiveProject,
     loading,
     changeTeam,
-    createNewProject,
-    // invite
+    createTeam,
     inviteOpen,
     openInvite,
     closeInvite,
     userQuery,
     userResults,
     inviteLoading,
-    searchUsers,
     inviteUser,
+    searchUsers,
+    receivedInvites,
+    acceptInvite,
+    declineInvite,
   };
 }

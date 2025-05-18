@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { TeamService } from '../services/team.service';
 import { TeamInviteService } from '../services/team-invite.service';
-import { CreateTeamDto, UpdateTeamDto, InviteUserDto } from '../dtos';
+import { CreateTeamDto, UpdateTeamDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
 
 @Controller('teams')
@@ -56,18 +56,5 @@ export class TeamController {
   async remove(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     await this.teamService.remove(+id, req.user.userId);
     return { deleted: true };
-  }
-
-  @Post(':teamId/invite')
-  async invite(
-    @Param('teamId') teamId: string,
-    @Body() inviteUserDto: InviteUserDto,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    return this.teamInviteService.inviteUser(
-      +teamId,
-      inviteUserDto.userId,
-      req.user.userId,
-    );
   }
 }

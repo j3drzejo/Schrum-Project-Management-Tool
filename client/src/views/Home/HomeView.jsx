@@ -1,4 +1,13 @@
-import { Box, Typography, CircularProgress, Paper, Grid, Card, CardContent, LinearProgress } from '@mui/material';
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Paper,
+  Grid,
+  Card,
+  CardContent,
+  LinearProgress,
+} from '@mui/material';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useSidebar } from '../../contexts/SidebarContext';
 
@@ -7,13 +16,14 @@ export default function HomeView() {
 
   if (loading || !currentTeam) {
     return (
-      <Box 
-        display="flex" 
-        justifyContent="center" 
-        alignItems="center" 
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         height="100vh"
         sx={{
-          background: 'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
+          background:
+            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
         }}
       >
         <CircularProgress size={48} sx={{ color: '#F4A7B9' }} />
@@ -28,7 +38,8 @@ export default function HomeView() {
         component="main"
         flexGrow={1}
         sx={{
-          background: 'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
+          background:
+            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
           overflowY: 'auto',
           p: 4,
         }}
@@ -44,10 +55,10 @@ export default function HomeView() {
             mx: 'auto',
             boxShadow: '0 8px 24px rgba(244,167,185,0.2)',
             transition: 'transform 0.2s, box-shadow 0.2s',
-            '&:hover': { 
+            '&:hover': {
               transform: 'translateY(-5px)',
               boxShadow: '0 12px 28px rgba(244,167,185,0.3)',
-            }
+            },
           }}
         >
           {currentTeam.name}

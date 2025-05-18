@@ -13,9 +13,15 @@ import {
   Snackbar,
   Alert,
   Tooltip,
-  Paper
+  Paper,
 } from '@mui/material';
-import { Visibility, VisibilityOff, Email, Lock, Person } from '@mui/icons-material';
+import {
+  Visibility,
+  VisibilityOff,
+  Email,
+  Lock,
+  Person,
+} from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthViewModel } from '../../viewModels/authViewModel';
 import logo from '../../assets/logo.png';
@@ -33,23 +39,31 @@ export default function RegisterView() {
   const steps = ['Email', 'Personal Info', 'Security'];
 
   const isEmailValid = (email) => /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
-  const isNameValid = (name) => typeof name === 'string' && name.trim().length >= 2;
-  const isPasswordValid = (pw) => typeof pw === 'string' && pw.length >= 8 && /(?=.*[0-9])(?=.*[A-Za-z])/.test(pw);
+  const isNameValid = (name) =>
+    typeof name === 'string' && name.trim().length >= 2;
+  const isPasswordValid = (pw) =>
+    typeof pw === 'string' &&
+    pw.length >= 8 &&
+    /(?=.*[0-9])(?=.*[A-Za-z])/.test(pw);
 
   const validateStep = useCallback(() => {
     const errors = {};
     if (activeStep === 0) {
       if (!form.email) errors.email = 'Email is required';
-      else if (!isEmailValid(form.email)) errors.email = 'Please provide a valid email address';
+      else if (!isEmailValid(form.email))
+        errors.email = 'Please provide a valid email address';
     }
     if (activeStep === 1) {
       if (!form.name) errors.name = 'Full name is required';
-      else if (!isNameValid(form.name)) errors.name = 'Name must be at least 2 characters';
+      else if (!isNameValid(form.name))
+        errors.name = 'Name must be at least 2 characters';
     }
     if (activeStep === 2) {
       if (!form.password) errors.password = 'Password is required';
-      else if (form.password.length < 8) errors.password = 'Password must be at least 8 characters';
-      else if (!/(?=.*[0-9])(?=.*[A-Za-z])/.test(form.password)) errors.password = 'Password must contain letters and numbers.';
+      else if (form.password.length < 8)
+        errors.password = 'Password must be at least 8 characters';
+      else if (!/(?=.*[0-9])(?=.*[A-Za-z])/.test(form.password))
+        errors.password = 'Password must contain letters and numbers.';
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -84,7 +98,10 @@ export default function RegisterView() {
     const registered = await registerUser(form);
     if (registered) {
       setShowSuccess(true);
-      const loggedIn = await loginUser({ email: form.email, password: form.password });
+      const loggedIn = await loginUser({
+        email: form.email,
+        password: form.password,
+      });
       if (loggedIn) navigate('/');
     }
   };
@@ -99,7 +116,8 @@ export default function RegisterView() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          background: 'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
+          background:
+            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
         }}
       >
         <Box
@@ -147,10 +165,20 @@ export default function RegisterView() {
         <Avatar
           src={logo}
           alt="Company Logo"
-          sx={{ width: 80, height: 80, mx: 'auto', mb: 2, boxShadow: '0 4px 12px rgba(244, 167, 185, 0.4)' }}
+          sx={{
+            width: 80,
+            height: 80,
+            mx: 'auto',
+            mb: 2,
+            boxShadow: '0 4px 12px rgba(244, 167, 185, 0.4)',
+          }}
         />
 
-        <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', color: '#F4A7B9', mb: 3 }}>
+        <Typography
+          variant="h4"
+          align="center"
+          sx={{ fontWeight: 'bold', color: '#F4A7B9', mb: 3 }}
+        >
           Create Your Account
         </Typography>
 
@@ -169,7 +197,11 @@ export default function RegisterView() {
           ))}
         </Stepper>
 
-        <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mb: 2 }}>
+        <Typography
+          variant="body2"
+          align="center"
+          sx={{ color: 'text.secondary', mb: 2 }}
+        >
           Step {activeStep + 1} of {steps.length}: {steps[activeStep]}
         </Typography>
 
@@ -196,7 +228,9 @@ export default function RegisterView() {
               variant="outlined"
               sx={{
                 mb: 3,
-                '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#F4A7B9' },
+                '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+                  borderColor: '#F4A7B9',
+                },
                 '& .MuiInputLabel-root.Mui-focused': { color: '#F4A7B9' },
               }}
             />
@@ -210,7 +244,10 @@ export default function RegisterView() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={!!formErrors.name}
-              helperText={formErrors.name || "Enter your full name (at least 2 characters)."}
+              helperText={
+                formErrors.name ||
+                'Enter your full name (at least 2 characters).'
+              }
               slotProps={{
                 input: {
                   startAdornment: (
@@ -223,7 +260,9 @@ export default function RegisterView() {
               variant="outlined"
               sx={{
                 mb: 3,
-                '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#F4A7B9' },
+                '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+                  borderColor: '#F4A7B9',
+                },
                 '& .MuiInputLabel-root.Mui-focused': { color: '#F4A7B9' },
               }}
             />
@@ -238,7 +277,10 @@ export default function RegisterView() {
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               error={!!formErrors.password}
-              helperText={formErrors.password || "Min. 8 characters, must include letters and numbers."}
+              helperText={
+                formErrors.password ||
+                'Min. 8 characters, must include letters and numbers.'
+              }
               slotProps={{
                 input: {
                   startAdornment: (
@@ -249,7 +291,10 @@ export default function RegisterView() {
                   endAdornment: (
                     <InputAdornment position="end">
                       <Tooltip title="Use at least 8 characters with letters and numbers.">
-                        <IconButton onClick={handleClickShowPassword} edge="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </Tooltip>
@@ -260,7 +305,9 @@ export default function RegisterView() {
               variant="outlined"
               sx={{
                 mb: 3,
-                '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#F4A7B9' },
+                '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+                  borderColor: '#F4A7B9',
+                },
                 '& .MuiInputLabel-root.Mui-focused': { color: '#F4A7B9' },
               }}
             />
@@ -319,21 +366,42 @@ export default function RegisterView() {
           <Typography
             component={Link}
             to="/login"
-            sx={{ color: '#F4A7B9', fontWeight: 600, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+            sx={{
+              color: '#F4A7B9',
+              fontWeight: 600,
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' },
+            }}
           >
             Log In
           </Typography>
         </Typography>
       </Box>
 
-      <Snackbar open={showAlert} autoHideDuration={6000} onClose={() => setShowAlert(false)}>
-        <Alert onClose={() => setShowAlert(false)} severity="error" sx={{ width: '100%' }}>
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={() => setShowAlert(false)}
+      >
+        <Alert
+          onClose={() => setShowAlert(false)}
+          severity="error"
+          sx={{ width: '100%' }}
+        >
           {error || 'An error occurred during registration.'}
         </Alert>
       </Snackbar>
 
-      <Snackbar open={showSuccess} autoHideDuration={4000} onClose={() => setShowSuccess(false)}>
-        <Alert onClose={() => setShowSuccess(false)} severity="success" sx={{ width: '100%' }}>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={4000}
+        onClose={() => setShowSuccess(false)}
+      >
+        <Alert
+          onClose={() => setShowSuccess(false)}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
           Registration successful! Redirecting...
         </Alert>
       </Snackbar>

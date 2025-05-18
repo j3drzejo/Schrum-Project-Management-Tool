@@ -6,7 +6,7 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, 
+  withCredentials: true,
 });
 
 export const login = async (credentials) => {
@@ -18,7 +18,7 @@ export const register = async (data) => {
 };
 
 export const validateUser = async (token) => {
-  return await axiosInstance.get("/profile", {
+  return await axiosInstance.get('/profile', {
     headers: {
       Authorization: `Bearer ${token}`,
     },

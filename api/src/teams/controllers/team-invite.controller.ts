@@ -1,4 +1,12 @@
-import { Controller, Post, Param, Body, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  Body,
+  Req,
+  Get,
+  Delete,
+} from '@nestjs/common';
 import { TeamInviteService } from '../services/team-invite.service';
 import { InviteUserDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
@@ -13,9 +21,9 @@ export class TeamInviteController {
     @Body() inviteUserDto: InviteUserDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    return this.teamInviteService.inviteUser(
+    return this.teamInviteService.inviteUserByEmail(
       +teamId,
-      inviteUserDto.userId,
+      inviteUserDto.email,
       req.user.userId,
     );
   }
@@ -26,5 +34,19 @@ export class TeamInviteController {
     @Req() req: AuthenticatedRequest,
   ) {
     return this.teamInviteService.acceptInvite(+inviteId, req.user.userId);
+  }
+
+  @Delete(':inviteId/decline')
+  async decline(
+    @Param('inviteId') inviteId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    await this.teamInviteService.declineInvite(+inviteId, req.user.userId);
+    return { status: 'declined' };
+  }
+
+  @Get()
+  async getMine(@Req() req: AuthenticatedRequest) {
+    return this.teamInviteService.getPendingInvites(req.user.userId);
   }
 }

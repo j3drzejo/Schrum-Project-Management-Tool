@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class InviteUserDto {
   @ApiProperty({
-    description: 'ID of the user to invite',
-    example: 42,
+    description: 'Email of the user to invite',
+    example: 'user@example.com',
   })
   @IsNotEmpty()
-  @IsInt()
-  userId: number;
+  @IsEmail()
+  email: string;
 }

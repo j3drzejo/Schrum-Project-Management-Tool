@@ -16,9 +16,9 @@ export class TeamInviteService {
     @InjectRepository(User) private userRepo: Repository<User>,
   ) {}
 
-  async inviteUser(
+  async inviteUserByEmail(
     teamId: number,
-    invitedUserId: number,
+    invitedUserEmail: string,
     inviterId: number,
   ): Promise<TeamInvite> {
     const team = await this.teamRepo.findOne({
@@ -30,13 +30,15 @@ export class TeamInviteService {
     }
 
     const invitedUser = await this.userRepo.findOne({
-      where: { id: invitedUserId },
+      where: { email: invitedUserEmail },
     });
     if (!invitedUser) {
-      throw new NotFoundException(`User #${invitedUserId} not found`);
+      throw new NotFoundException(
+        `User with email ${invitedUserEmail} not found`,
+      );
     }
 
-    if (team.users.some((user) => user.id === invitedUserId)) {
+    if (team.users.some((user) => user.id === invitedUser.id)) {
       throw new BadRequestException('User is already a member of this team');
     }
 
@@ -55,7 +57,7 @@ export class TeamInviteService {
     const existingInvite = await this.inviteRepo.findOne({
       where: {
         team: { id: teamId },
-        invitedUser: { id: invitedUserId },
+        invitedUser: { id: invitedUser.id },
         accepted: false,
       },
     });
@@ -69,6 +71,7 @@ export class TeamInviteService {
       invitedBy: inviter,
       accepted: false,
     });
+
     return this.inviteRepo.save(invite);
   }
 
@@ -99,14 +102,39 @@ export class TeamInviteService {
       throw new NotFoundException('User not found');
     }
 
-    if (user.teams && user.teams.length > 0) {
-      throw new BadRequestException('User already belongs to a team');
+    if (user.teams.some((team) => team.id === invite.team.id)) {
+      throw new BadRequestException('User is already a member of this team');
     }
 
-    user.teams = [invite.team];
+    user.teams.push(invite.team);
     invite.accepted = true;
 
     await this.userRepo.save(user);
     return this.inviteRepo.save(invite);
+  }
+
+  async getPendingInvites(userId: number): Promise<TeamInvite[]> {
+    return this.inviteRepo.find({
+      where: { invitedUser: { id: userId }, accepted: false },
+      relations: ['team', 'invitedBy'],
+    });
+  }
+
+  async declineInvite(inviteId: number, userId: number): Promise<void> {
+    const invite = await this.inviteRepo.findOne({
+      where: { id: inviteId },
+      relations: ['invitedUser'],
+    });
+    if (!invite) {
+      throw new NotFoundException(`Invite #${inviteId} not found`);
+    }
+    if (invite.invitedUser.id !== userId) {
+      throw new ForbiddenException('Not authorized to decline this invite');
+    }
+    if (invite.accepted) {
+      throw new BadRequestException('Cannot decline an accepted invite');
+    }
+
+    await this.inviteRepo.delete(inviteId);
   }
 }
