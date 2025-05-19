@@ -4,8 +4,8 @@ import LoginView from './views/Auth/LoginView';
 import RegisterView from './views/Auth/RegisterView';
 import ProtectedRoute from './routes/ProtectedRoute';
 import UnprotectedRoute from './routes/UnprotectedRoute';
-import { SidebarProvider } from './contexts/SidebarContext';
-import { AuthProvider } from './utils/AuthProvider';
+import { SidebarProvider } from './contexts/SidebarContext/SidebarProvider';
+import { AuthProvider } from './contexts/AuthContext/AuthProvider';
 
 function App() {
   return (

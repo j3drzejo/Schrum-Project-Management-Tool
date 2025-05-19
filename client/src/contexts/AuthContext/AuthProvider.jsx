@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext } from './AuthContext';
 
 const TOKEN_KEY = 'token';
 const TOKEN_EXPIRY_DAYS = 1;

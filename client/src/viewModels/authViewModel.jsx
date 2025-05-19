@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useAuth } from '../utils/useAuth';
+import { useAuth } from '../contexts/AuthContext/useAuth';
 import { authService } from '../services/authService';
 
 export const useAuthViewModel = () => {

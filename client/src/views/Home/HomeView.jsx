@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Paper } from '@mui/material';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { useSidebar } from '../../contexts/SidebarContext';
+import { useSidebar } from '../../contexts/SidebarContext/useSidebar';
 import { Snackbar, Alert } from '@mui/material';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 

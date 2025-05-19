@@ -1,7 +1,7 @@
 // components/sidebar/Sidebar.jsx
 import { useState } from 'react';
 import { Box, Paper, CircularProgress } from '@mui/material';
-import { useSidebar } from '../../contexts/SidebarContext';
+import { useSidebar } from '../../contexts/SidebarContext/useSidebar';
 import LoadingSpinner from '../common/LoadingSpinner';
 // Import the new components
 import UserProfile from './UserProfile';
