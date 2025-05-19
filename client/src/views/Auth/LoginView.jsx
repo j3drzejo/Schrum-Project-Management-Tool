@@ -64,8 +64,12 @@ export default function LoginView() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const success = await loginUser(form);
-      if (success) {
+      try {
+        await loginUser(form);
+      } catch (err) {
+        console.error('Login failed:', err);
+        return;
+      } finally {
         navigate('/');
       }
     }

@@ -115,8 +115,10 @@ export class TeamInviteService {
 
   async getPendingInvites(userId: number): Promise<TeamInvite[]> {
     return this.inviteRepo.find({
-      where: { invitedUser: { id: userId }, accepted: false },
-      relations: ['team', 'invitedBy'],
+      where: {
+        invitedUser: { id: userId },
+        accepted: false,
+      },
     });
   }
 

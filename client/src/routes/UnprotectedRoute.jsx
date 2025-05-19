@@ -1,41 +1,27 @@
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import { validateUser } from '../services/authService';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuthViewModel } from '../viewmodels/authViewModel';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
-const UnprotectedRoute = ({ children }) => {
-  const [isValid, setIsValid] = useState(null);
-  const token = Cookies.get('token');
+const UnprotectedRoute = ({ children, redirectPath = '/' }) => {
+  const { isAuthenticated, loading, validateToken } = useAuthViewModel();
+  const location = useLocation();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if (!token) {
-        setIsValid(false);
-        return;
-      }
+    validateToken();
+  }, []);
 
-      try {
-        await validateUser(token);
-        setIsValid(true);
-      } catch (err) {
-        console.error('Token validation failed:', err);
-        Cookies.remove('token');
-        setIsValid(false);
-      }
-    };
-
-    checkAuth();
-  }, [token]);
-
-  if (isValid === null) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-white">
-        <span className="loader"></span>
-      </div>
-    );
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
-  return isValid ? <Navigate to="/" replace /> : children;
+  const from = location.state?.from?.pathname || redirectPath;
+
+  if (isAuthenticated) {
+    return <Navigate to={from} replace />;
+  }
+
+  return children;
 };
 
 export default UnprotectedRoute;

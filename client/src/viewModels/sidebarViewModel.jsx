@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { sidebarService } from '../services/sidebarService';
+import Cookies from 'js-cookie';
 
 export function useSidebarViewModel() {
   const [user, setUser] = useState(null);
@@ -14,60 +15,74 @@ export function useSidebarViewModel() {
   const [userResults, setUserResults] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [receivedInvites, setReceivedInvites] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     async function init() {
+      const token = Cookies.get('token');
+      if (!token) {
+        console.error('No token found, redirecting to login');
+        window.location.href = '/';
+        return;
+      }
+
       setLoading(true);
       try {
-        const [userInfo, teamList] = await Promise.all([
+        const [userInfo, teamsData] = await Promise.all([
           sidebarService.getUserInfo(),
           sidebarService.getTeams(),
         ]);
+        console.log('User Info:', userInfo);
         setUser(userInfo);
-        setTeams(teamList);
-        if (teamList.length > 0) setCurrentTeam(teamList[0]);
+        console.log('Teams Data:', teamsData);
+        setTeams(teamsData);
+
+        if (teamsData.length > 0) {
+          const firstTeam = teamsData[0];
+          setCurrentTeam(firstTeam);
+          setProjects(firstTeam.projects);
+          setActiveProject(firstTeam.projects[0] ?? null);
+        }
       } catch (error) {
         console.error('Failed to initialize sidebar:', error);
+        setErrorMessage(error.message || 'An unexpected error occurred');
       } finally {
         setLoading(false);
       }
     }
+
     init();
   }, []);
 
   useEffect(() => {
-    async function loadProjects() {
-      if (currentTeam) {
-        try {
-          const projectList = await sidebarService.getProjects(currentTeam.id);
-          setProjects(projectList);
-          const firstRegularProject = projectList.find(
-            (p) => p !== '+ New Project',
-          );
-          if (firstRegularProject) setActiveProject(firstRegularProject);
-        } catch (error) {
-          console.error('Failed to load projects:', error);
-          setProjects([]);
-          setActiveProject(null);
-        }
-      }
+    if (currentTeam?.projects) {
+      setProjects(currentTeam?.projects);
+      setActiveProject(currentTeam?.projects[0]);
     }
-    loadProjects();
   }, [currentTeam]);
 
   useEffect(() => {
     async function loadInvites() {
       try {
         const invites = await sidebarService.getInvites();
+        console.log('Received Invites:', invites);
         setReceivedInvites(invites);
       } catch (error) {
         console.error('Failed to load invites:', error);
+        setErrorMessage(error.message || 'An unexpected error occurred');
       }
     }
     loadInvites();
   }, []);
 
-  const changeTeam = async (team) => {
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  const changeTeam = (team) => {
     setCurrentTeam(team);
     setActiveProject(null);
   };
@@ -79,45 +94,71 @@ export function useSidebarViewModel() {
     setUserResults([]);
   };
 
-  const inviteUser = async (userId) => {
+  const inviteUser = async (email) => {
+    if (!currentTeam?.id || !email) return;
     setInviteLoading(true);
     try {
-      await sidebarService.addUserToTeam(currentTeam.id, userId);
+      await sidebarService.addUserToTeam(currentTeam.id, email);
       closeInvite();
     } catch (error) {
       console.error('Failed to invite user:', error);
+      setErrorMessage(error.message || 'An unexpected error occurred');
     } finally {
       setInviteLoading(false);
     }
   };
 
-  const searchUsers = async (query) => {
-    setUserQuery(query);
-    const results = await sidebarService.getUsers(query);
-    setUserResults(results);
+  const createTeam = async (name) => {
+    try {
+      setLoading(true);
+      const newTeam = await sidebarService.createTeam(name);
+      setTeams((prev) => [...prev, newTeam]);
+      setCurrentTeam(newTeam);
+    } catch (error) {
+      console.error('Failed to create team:', error);
+      setErrorMessage(error.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const createTeam = async (name) => {
-    const newTeam = { id: Date.now(), name };
-    setTeams((prev) => [...prev, newTeam]);
-    setCurrentTeam(newTeam);
+  const createProject = async (teamId, name) => {
+    try {
+      setLoading(true);
+      const newProject = await sidebarService.createProject(teamId, name);
+      setProjects((prev) => [...prev, newProject]);
+      setActiveProject(newProject);
+    } catch (error) {
+      console.error('Failed to create project:', error);
+      setErrorMessage(error.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const acceptInvite = async (inviteId) => {
     try {
+      setLoading(true);
       await sidebarService.acceptInvite(inviteId);
       setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
+      await sidebarService.getTeams();
     } catch (error) {
       console.error('Failed to accept invite:', error);
+      setErrorMessage(error.message || 'An unexpected error occurred');
+      setLoading(false);
     }
   };
 
   const declineInvite = async (inviteId) => {
     try {
+      setLoading(true);
       await sidebarService.declineInvite(inviteId);
       setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
+      await sidebarService.getTeams();
     } catch (error) {
       console.error('Failed to decline invite:', error);
+      setErrorMessage(error.message || 'An unexpected error occurred');
+      setLoading(false);
     }
   };
 
@@ -135,12 +176,14 @@ export function useSidebarViewModel() {
     openInvite,
     closeInvite,
     userQuery,
+    setUserQuery,
     userResults,
     inviteLoading,
     inviteUser,
-    searchUsers,
     receivedInvites,
     acceptInvite,
     declineInvite,
+    createProject,
+    errorMessage,
   };
 }

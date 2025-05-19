@@ -1,49 +1,132 @@
-import { useState } from 'react';
-import * as authService from '../services/authService';
-import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { authService } from '../services/authService';
 
 export const useAuthViewModel = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const {
+    isAuthenticated,
+    isLoading,
+    error,
+    setToken,
+    clearToken,
+    setLoading,
+    setError,
+    setUser,
+    getToken,
+  } = useAuth();
 
-  const loginUser = async (formData) => {
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localError, setLocalError] = useState(null);
+
+  useEffect(() => {
+    validateToken();
+  }, []);
+
+  const validateToken = async () => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    }
+
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 5000));
+
+    try {
+      const userData = await authService.validateUser(token);
+      setUser(userData);
+    } catch (err) {
+      console.error('Token validation failed:', err);
+      clearToken();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Handle user login with form data
+   * @param {Object} formData - User credentials
+   * @returns {Promise<boolean>} Success status
+   */
+  const loginUser = async (formData) => {
+    setLocalLoading(true);
+    setLocalError(null);
     setError(null);
+
     try {
       const res = await authService.login(formData);
-      console.log(res);
-      const data = res.data;
-      if (data.accessToken) {
-        Cookies.set('token', data.accessToken, { expires: 1 }); // 1 day
+
+      if (res.accessToken) {
+        setToken(res.accessToken, res.user);
+        navigate('/');
         return true;
       } else {
-        setError('Invalid response from server');
+        const errorMsg = 'Invalid response from server';
+        setLocalError(errorMsg);
+        setError(errorMsg);
         return false;
       }
     } catch (err) {
-      console.error(err);
-      setError('Login failed');
+      console.error('Login error:', err);
+      const errorMsg = err.response?.data?.message || 'Login failed';
+      setLocalError(errorMsg);
+      setError(errorMsg);
       return false;
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
+  /**
+   * Handle user registration with form data
+   * @param {Object} formData - User registration data
+   * @returns {Promise<boolean>} Success status
+   */
   const registerUser = async (formData) => {
-    setLoading(true);
+    setLocalLoading(true);
+    setLocalError(null);
     setError(null);
+
     try {
       await authService.register(formData);
+      navigate('/login');
       return true;
     } catch (err) {
-      console.error(err);
-      setError('Registration failed');
+      console.error('Registration error:', err);
+      const errorMsg = err.response?.data?.message || 'Registration failed';
+      setLocalError(errorMsg);
+      setError(errorMsg);
       return false;
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
-  return { loginUser, registerUser, loading, error };
+  /**
+   * Handle user logout
+   */
+  const logoutUser = async () => {
+    setLocalLoading(true);
+
+    try {
+      await authService.logout();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      clearToken();
+      setLocalLoading(false);
+      navigate('/login');
+    }
+  };
+
+  return {
+    loginUser,
+    registerUser,
+    logoutUser,
+    validateToken,
+    isAuthenticated,
+    loading: isLoading || localLoading,
+    error: error || localError,
+  };
 };

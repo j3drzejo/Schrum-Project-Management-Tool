@@ -45,8 +45,8 @@ export class TeamInviteController {
     return { status: 'declined' };
   }
 
-  @Get()
-  async getMine(@Req() req: AuthenticatedRequest) {
+  @Get('pending')
+  getMine(@Req() req: AuthenticatedRequest) {
     return this.teamInviteService.getPendingInvites(req.user.userId);
   }
 }

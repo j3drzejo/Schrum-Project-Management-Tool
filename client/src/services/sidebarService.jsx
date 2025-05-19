@@ -1,61 +1,49 @@
+import { axiosInstance } from './apiClient';
+
 export const sidebarService = {
-  getUserInfo: async () => ({ id: 1, name: 'Jane Doe', avatar: null }),
-
-  getTeams: async () => [
-    { id: 1, name: 'Team Alpha' },
-    { id: 2, name: 'Team Beta' },
-    { id: 3, name: 'Team Gamma' },
-  ],
-
-  getProjects: async (teamId) => {
-    const projectsMap = {
-      1: ['Dashboard UI', 'Onboarding Flow'],
-      2: ['Analytics Module', 'API Integration'],
-      3: ['Marketing Site', 'SEO Optimization'],
-    };
-    return [...(projectsMap[teamId] || []), '+ New Project'];
+  getUserInfo: async () => {
+    const { data } = await axiosInstance.get('/auth/profile');
+    return data;
   },
 
-  getUsers: async (query) => {
-    // Mock user directory; filter by query
-    const all = [
-      { id: 2, name: 'Alice Smith' },
-      { id: 3, name: 'Bob Johnson' },
-      { id: 4, name: 'Charlie Lee' },
-      { id: 5, name: 'Dana Park' },
-      { id: 6, name: 'Elliot Chen' },
-      { id: 7, name: 'Frances Kim' },
-    ];
-    return all.filter((u) =>
-      u.name.toLowerCase().includes(query.toLowerCase()),
-    );
+  getTeams: async () => {
+    const { data } = await axiosInstance.get('/teams');
+    return data;
   },
 
-  addUserToTeam: async (teamId, userId) => {
-    // Mock success
-    return { success: true };
+  addUserToTeam: async (teamId, email) => {
+    const { data } = await axiosInstance.post(`/teams/invites/${teamId}`, {
+      email,
+    });
+    return data;
   },
 
-  createProject: async (teamId, projectName) => {
-    // Mock project creation
-    return { id: Math.floor(Math.random() * 1000), name: projectName };
+  createProject: async (teamId, projectName, description = 'desc') => {
+    const { data } = await axiosInstance.post('/projects', {
+      name: projectName,
+      description,
+      teamId,
+    });
+    return data;
   },
 
   createTeam: async (teamName) => {
-    return { name: teamName };
+    const { data } = await axiosInstance.post('/teams', { name: teamName });
+    return data;
   },
 
-  getInvites: async () => [
-    { id: 101, team: 'Team Beta', from: 'Alice Smith' },
-    { id: 102, team: 'Team Gamma', from: 'Bob Johnson' },
-  ],
+  getInvites: async () => {
+    const { data } = await axiosInstance.get('/teams/invites/pending');
+    return data;
+  },
 
   acceptInvite: async (inviteId) => {
-    console.log(`Accepted invite ${inviteId}`);
+    await axiosInstance.post(`/teams/invites/${inviteId}/accept`);
     return { success: true };
   },
+
   declineInvite: async (inviteId) => {
-    console.log(`Declined invite ${inviteId}`);
+    await axiosInstance.delete(`/teams/invites/${inviteId}/decline`);
     return { success: true };
   },
 };

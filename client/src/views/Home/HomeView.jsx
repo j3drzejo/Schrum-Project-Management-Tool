@@ -1,20 +1,12 @@
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  Paper,
-  Grid,
-  Card,
-  CardContent,
-  LinearProgress,
-} from '@mui/material';
+import { Box, CircularProgress, Paper } from '@mui/material';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { Snackbar, Alert } from '@mui/material';
 
 export default function HomeView() {
-  const { loading, currentTeam, activeProject } = useSidebar();
+  const { loading, currentTeam, activeProject, errorMessage } = useSidebar();
 
-  if (loading || !currentTeam) {
+  if (loading) {
     return (
       <Box
         display="flex"
@@ -61,10 +53,20 @@ export default function HomeView() {
             },
           }}
         >
-          {currentTeam.name}
-          {activeProject}
+          {currentTeam?.name}
+          {activeProject?.name}
         </Paper>
       </Box>
+      <Snackbar
+        open={!!errorMessage}
+        autoHideDuration={5000}
+        onClose={() => {}}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

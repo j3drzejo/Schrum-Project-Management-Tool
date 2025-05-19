@@ -1,26 +1,26 @@
-import axios from 'axios';
-import { API_BASE } from './consts';
+import { axiosInstance } from './apiClient';
 
-const axiosInstance = axios.create({
-  baseURL: API_BASE + '/auth',
-  headers: {
-    'Content-Type': 'application/json',
+export const authService = {
+  login: async (credentials) => {
+    const { data } = await axiosInstance.post('/auth/login', credentials);
+    console.log(data);
+    return data;
   },
-  withCredentials: true,
-});
 
-export const login = async (credentials) => {
-  return await axiosInstance.post('/login', credentials);
-};
+  register: async (dataObj) => {
+    const { data } = await axiosInstance.post('/auth/register', dataObj);
+    return data;
+  },
 
-export const register = async (data) => {
-  return await axiosInstance.post('/register', data);
-};
+  validateUser: async (token) => {
+    const { data } = await axiosInstance.get('/auth/profile', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  },
 
-export const validateUser = async (token) => {
-  return await axiosInstance.get('/profile', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  logout: async () => {
+    const { data } = await axiosInstance.post('/auth/logout');
+    return data;
+  },
 };

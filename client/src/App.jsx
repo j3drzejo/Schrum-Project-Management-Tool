@@ -5,40 +5,46 @@ import RegisterView from './views/Auth/RegisterView';
 import ProtectedRoute from './routes/ProtectedRoute';
 import UnprotectedRoute from './routes/UnprotectedRoute';
 import { SidebarProvider } from './contexts/SidebarContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <UnprotectedRoute>
-              <LoginView />
-            </UnprotectedRoute>
-          }
-        />
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <UnprotectedRoute>
+                <LoginView />
+              </UnprotectedRoute>
+            }
+          />
 
-        <Route
-          path="/register"
-          element={
-            <UnprotectedRoute>
-              <RegisterView />
-            </UnprotectedRoute>
-          }
-        />
+          <Route
+            path="/register"
+            element={
+              <UnprotectedRoute>
+                <RegisterView />
+              </UnprotectedRoute>
+            }
+          />
 
-        <Route
-          path="/"
-          element={
-            //<ProtectedRoute>
-            <SidebarProvider>
-              <HomeView />
-            </SidebarProvider>
-            //</ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <HomeView />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Add a fallback route */}
+          <Route path="*" element={<div>Page not found</div>} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 }
