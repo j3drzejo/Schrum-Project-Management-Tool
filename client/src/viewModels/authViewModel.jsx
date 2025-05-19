@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext/useAuth';
-import { authService } from '../services/authService';
+import { authService } from '../services';
 
 export const useAuthViewModel = () => {
   const navigate = useNavigate();

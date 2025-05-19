@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { sidebarService } from '../services/sidebarService';
+import {
+  authService,
+  teamsService,
+  teamInvitesService,
+  projectsService,
+} from '../services';
+
 import Cookies from 'js-cookie';
 
 export function useSidebarViewModel() {
@@ -29,8 +35,8 @@ export function useSidebarViewModel() {
       setLoading(true);
       try {
         const [userInfo, teamsData] = await Promise.all([
-          sidebarService.getUserInfo(),
-          sidebarService.getTeams(),
+          authService.validateUser(),
+          teamsService.getTeams(),
         ]);
         console.log('User Info:', userInfo);
         setUser(userInfo);
@@ -64,7 +70,7 @@ export function useSidebarViewModel() {
   useEffect(() => {
     async function loadInvites() {
       try {
-        const invites = await sidebarService.getInvites();
+        const invites = await teamInvitesService.getPendingInvites();
         console.log('Received Invites:', invites);
         setReceivedInvites(invites);
       } catch (error) {
@@ -98,7 +104,7 @@ export function useSidebarViewModel() {
     if (!currentTeam?.id || !email) return;
     setInviteLoading(true);
     try {
-      await sidebarService.addUserToTeam(currentTeam.id, email);
+      await teamInvitesService.addUserToTeam(currentTeam.id, email);
       closeInvite();
     } catch (error) {
       console.error('Failed to invite user:', error);
@@ -111,7 +117,7 @@ export function useSidebarViewModel() {
   const createTeam = async (name) => {
     try {
       setLoading(true);
-      const newTeam = await sidebarService.createTeam(name);
+      const newTeam = await teamsService.createTeam(name);
       setTeams((prev) => [...prev, newTeam]);
       setCurrentTeam(newTeam);
     } catch (error) {
@@ -125,7 +131,11 @@ export function useSidebarViewModel() {
   const createProject = async (teamId, name) => {
     try {
       setLoading(true);
-      const newProject = await sidebarService.createProject(teamId, name);
+      const newProject = await projectsService.createProject(
+        name,
+        'New Team',
+        teamId,
+      );
       setProjects((prev) => [...prev, newProject]);
       setActiveProject(newProject);
     } catch (error) {
@@ -139,9 +149,9 @@ export function useSidebarViewModel() {
   const acceptInvite = async (inviteId) => {
     try {
       setLoading(true);
-      await sidebarService.acceptInvite(inviteId);
+      await teamInvitesService.acceptInvite(inviteId);
       setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
-      await sidebarService.getTeams();
+      await teamsService.getTeams();
     } catch (error) {
       console.error('Failed to accept invite:', error);
       setErrorMessage(error.message || 'An unexpected error occurred');
@@ -152,9 +162,9 @@ export function useSidebarViewModel() {
   const declineInvite = async (inviteId) => {
     try {
       setLoading(true);
-      await sidebarService.declineInvite(inviteId);
+      await teamInvitesService.declineInvite(inviteId);
       setReceivedInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
-      await sidebarService.getTeams();
+      await teamsService.getTeams();
     } catch (error) {
       console.error('Failed to decline invite:', error);
       setErrorMessage(error.message || 'An unexpected error occurred');
