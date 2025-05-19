@@ -1,10 +1,8 @@
 import { createContext, useContext } from 'react';
 import { useSidebarViewModel } from '../viewModels/sidebarViewModel';
 
-// Create a context for the sidebar view model
 const SidebarContext = createContext(null);
 
-// Create a provider component
 export function SidebarProvider({ children }) {
   const sidebarViewModel = useSidebarViewModel();
 
@@ -15,7 +13,7 @@ export function SidebarProvider({ children }) {
   );
 }
 
-// Create a custom hook to use the sidebar context
+// eslint-disable-next-line react-refresh/only-export-components
 export function useSidebar() {
   const context = useContext(SidebarContext);
   if (!context) {

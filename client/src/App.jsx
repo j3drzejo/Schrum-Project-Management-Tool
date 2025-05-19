@@ -5,7 +5,7 @@ import RegisterView from './views/Auth/RegisterView';
 import ProtectedRoute from './routes/ProtectedRoute';
 import UnprotectedRoute from './routes/UnprotectedRoute';
 import { SidebarProvider } from './contexts/SidebarContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './utils/AuthProvider';
 
 function App() {
   return (
@@ -41,7 +41,6 @@ function App() {
             }
           />
 
-          {/* Add a fallback route */}
           <Route path="*" element={<div>Page not found</div>} />
         </Routes>
       </AuthProvider>

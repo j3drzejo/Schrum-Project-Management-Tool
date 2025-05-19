@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
+import { useAuth } from '../utils/useAuth';
 import { authService } from '../services/authService';
 
 export const useAuthViewModel = () => {
@@ -19,10 +19,6 @@ export const useAuthViewModel = () => {
 
   const [localLoading, setLocalLoading] = useState(false);
   const [localError, setLocalError] = useState(null);
-
-  useEffect(() => {
-    validateToken();
-  }, []);
 
   const validateToken = async () => {
     const token = getToken();
@@ -44,11 +40,6 @@ export const useAuthViewModel = () => {
     }
   };
 
-  /**
-   * Handle user login with form data
-   * @param {Object} formData - User credentials
-   * @returns {Promise<boolean>} Success status
-   */
   const loginUser = async (formData) => {
     setLocalLoading(true);
     setLocalError(null);
@@ -78,11 +69,6 @@ export const useAuthViewModel = () => {
     }
   };
 
-  /**
-   * Handle user registration with form data
-   * @param {Object} formData - User registration data
-   * @returns {Promise<boolean>} Success status
-   */
   const registerUser = async (formData) => {
     setLocalLoading(true);
     setLocalError(null);
@@ -103,9 +89,6 @@ export const useAuthViewModel = () => {
     }
   };
 
-  /**
-   * Handle user logout
-   */
   const logoutUser = async () => {
     setLocalLoading(true);
 

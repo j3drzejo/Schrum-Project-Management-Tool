@@ -1,8 +1,18 @@
+import { Box, CircularProgress } from '@mui/material';
+
 const LoadingSpinner = () => {
   return (
-    <div className="flex justify-center items-center h-screen bg-white">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+      sx={{
+        background: 'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
+      }}
+    >
+      <CircularProgress size={48} sx={{ color: '#F4A7B9' }} />
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   TextField,
   Button,
@@ -8,7 +8,6 @@ import {
   InputAdornment,
   IconButton,
   FormControl,
-  CircularProgress,
   Paper,
   Tooltip,
   Snackbar,
@@ -18,64 +17,79 @@ import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthViewModel } from '../../viewModels/authViewModel';
 import logo from '../../assets/logo.png';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_HINT = 'Password must be at least 6 characters.';
 
 export default function LoginView() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [formErrors, setFormErrors] = useState({ email: '', password: '' });
+  const [showAlert, setShowAlert] = useState(false);
+
   const { loginUser, loading, error } = useAuthViewModel();
   const navigate = useNavigate();
 
-  const [showAlert, setShowAlert] = useState(false);
+  const validateEmail = useCallback((email) => {
+    if (!email) return 'Email is required';
+    if (!EMAIL_REGEX.test(email)) return 'Please enter a valid email address';
+    return '';
+  }, []);
 
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const passwordHint = 'Password must be at least 6 characters.';
+  const validatePassword = useCallback((password) => {
+    if (!password) return 'Password is required';
+    if (password.length < PASSWORD_MIN_LENGTH)
+      return `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+    return '';
+  }, []);
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = { email: '', password: '' };
+  const validateForm = useCallback(() => {
+    const emailError = validateEmail(form.email);
+    const passwordError = validatePassword(form.password);
 
-    if (!form.email) {
-      newErrors.email = 'Email is required';
-      valid = false;
-    } else if (!validateEmail(form.email)) {
-      newErrors.email = 'Please enter a valid email address';
-      valid = false;
-    }
-
-    if (!form.password) {
-      newErrors.password = 'Password is required';
-      valid = false;
-    } else if (form.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-      valid = false;
-    }
+    const newErrors = {
+      email: emailError,
+      password: passwordError,
+    };
 
     setFormErrors(newErrors);
-    return valid;
-  };
+    return !emailError && !passwordError;
+  }, [form, validateEmail, validatePassword]);
 
-  const isFormValid = () =>
-    form.email &&
-    validateEmail(form.email) &&
-    form.password &&
-    form.password.length >= 6;
+  const isFormValid = useCallback(
+    () => !validateEmail(form.email) && !validatePassword(form.password),
+    [form, validateEmail, validatePassword],
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
         await loginUser(form);
+        navigate('/');
       } catch (err) {
         console.error('Login failed:', err);
-        return;
-      } finally {
-        navigate('/');
       }
     }
   };
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleFieldChange = (field) => (e) => {
+    const value = e.target.value;
+    setForm((prev) => ({ ...prev, [field]: value }));
+
+    if (formErrors[field]) {
+      setFormErrors((prev) => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+
+  const handleAlertClose = (_, reason) => {
+    if (reason === 'clickaway') return;
+    setShowAlert(false);
+  };
 
   useEffect(() => {
     if (error) {
@@ -83,26 +97,8 @@ export default function LoginView() {
     }
   }, [error]);
 
-  const handleAlertClose = (_, reason) => {
-    if (reason === 'clickaway') return;
-    setShowAlert(false);
-  };
-
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        sx={{
-          background:
-            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
-        }}
-      >
-        <CircularProgress size={48} sx={{ color: '#F4A7B9' }} />
-      </Box>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -156,14 +152,14 @@ export default function LoginView() {
 
         <FormControl fullWidth error={!!formErrors.email}>
           <TextField
+            id="email"
+            name="email"
             label="Email"
             type="email"
             required
+            autoComplete="email"
             value={form.email}
-            onChange={(e) => {
-              setForm({ ...form, email: e.target.value });
-              if (formErrors.email) setFormErrors({ ...formErrors, email: '' });
-            }}
+            onChange={handleFieldChange('email')}
             slotProps={{
               input: {
                 startAdornment: (
@@ -185,20 +181,20 @@ export default function LoginView() {
               '& .MuiInputLabel-root.Mui-focused': { color: '#F4A7B9' },
             }}
             helperText={formErrors.email || 'Enter your email address.'}
+            error={!!formErrors.email}
           />
         </FormControl>
 
         <FormControl fullWidth error={!!formErrors.password}>
           <TextField
+            id="password"
+            name="password"
             label="Password"
             type={showPassword ? 'text' : 'password'}
             required
+            autoComplete="current-password"
             value={form.password}
-            onChange={(e) => {
-              setForm({ ...form, password: e.target.value });
-              if (formErrors.password)
-                setFormErrors({ ...formErrors, password: '' });
-            }}
+            onChange={handleFieldChange('password')}
             slotProps={{
               input: {
                 startAdornment: (
@@ -212,7 +208,7 @@ export default function LoginView() {
                 ),
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Tooltip title={passwordHint}>
+                    <Tooltip title={PASSWORD_HINT}>
                       <IconButton
                         onClick={handleClickShowPassword}
                         edge="end"
@@ -232,14 +228,15 @@ export default function LoginView() {
               },
               '& .MuiInputLabel-root.Mui-focused': { color: '#F4A7B9' },
             }}
-            helperText={formErrors.password || passwordHint}
+            helperText={formErrors.password || PASSWORD_HINT}
+            error={!!formErrors.password}
           />
         </FormControl>
 
         <Box display="flex" justifyContent="flex-end">
           <Typography
             component={Link}
-            to="/login"
+            to="/forgot-password"
             sx={{
               color: '#F4A7B9',
               textDecoration: 'none',

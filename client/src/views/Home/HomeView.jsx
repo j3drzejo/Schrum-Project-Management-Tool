@@ -2,25 +2,13 @@ import { Box, CircularProgress, Paper } from '@mui/material';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { Snackbar, Alert } from '@mui/material';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 export default function HomeView() {
   const { loading, currentTeam, activeProject, errorMessage } = useSidebar();
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-        sx={{
-          background:
-            'linear-gradient(to bottom right, #ffe4e6, #fbcfe8, #fff)',
-        }}
-      >
-        <CircularProgress size={48} sx={{ color: '#F4A7B9' }} />
-      </Box>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

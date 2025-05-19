@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Box, Paper, CircularProgress } from '@mui/material';
 import { useSidebar } from '../../contexts/SidebarContext';
-
+import LoadingSpinner from '../common/LoadingSpinner';
 // Import the new components
 import UserProfile from './UserProfile';
 import InviteDialog from './InviteDialog';
@@ -77,17 +77,7 @@ export default function Sidebar() {
   };
 
   if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        p={2}
-      >
-        <CircularProgress size={24} sx={{ color: '#F4A7B9' }} />
-      </Box>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
