@@ -12,4 +12,10 @@ export const boardsService = {
     });
     return data;
   },
+
+  createForSprint(sprintId, name) {
+    return axiosInstance.post(`/sprints/${sprintId}/board`, {
+      name,
+    });
+  },
 };

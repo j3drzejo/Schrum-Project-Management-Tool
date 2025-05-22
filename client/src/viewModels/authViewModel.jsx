@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext/useAuth';
 import { authService } from '../services';
 
-export const useAuthViewModel = () => {
+export function useAuthViewModel() {
   const navigate = useNavigate();
   const {
     isAuthenticated,
@@ -112,4 +112,4 @@ export const useAuthViewModel = () => {
     loading: isLoading || localLoading,
     error: error || localError,
   };
-};
+}

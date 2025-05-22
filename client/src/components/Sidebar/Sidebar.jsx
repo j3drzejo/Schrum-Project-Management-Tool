@@ -1,9 +1,7 @@
-// components/sidebar/Sidebar.jsx
 import { useState } from 'react';
-import { Box, Paper, CircularProgress } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useSidebar } from '../../contexts/SidebarContext/useSidebar';
 import LoadingSpinner from '../common/LoadingSpinner';
-// Import the new components
 import UserProfile from './UserProfile';
 import InviteDialog from './InviteDialog';
 import TeamSelector from './TeamSelector';

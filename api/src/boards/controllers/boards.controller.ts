@@ -4,6 +4,7 @@ import {
   Param,
   Put,
   Body,
+  Post,
   ParseIntPipe,
 } from '@nestjs/common';
 import { BoardsService } from '../services/boards.service';
@@ -24,5 +25,13 @@ export class BoardsController {
     @Body() dto: UpdateBoardDto,
   ) {
     return this.boardsService.update(boardId, dto);
+  }
+
+  @Post('sprints/:sprintId/board')
+  createForSprint(
+    @Param('sprintId', ParseIntPipe) sprintId: number,
+    @Body('name') name?: string,
+  ) {
+    return this.boardsService.createForSprint(sprintId, name);
   }
 }

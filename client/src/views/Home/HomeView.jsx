@@ -3,9 +3,10 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import { useSidebar } from '../../contexts/SidebarContext/useSidebar';
 import { Snackbar, Alert } from '@mui/material';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import Task from '../../components/task/Task';
 
 export default function HomeView() {
-  const { loading, currentTeam, activeProject, errorMessage } = useSidebar();
+  const { loading, errorMessage } = useSidebar();
 
   if (loading) {
     return <LoadingSpinner />;
@@ -41,8 +42,7 @@ export default function HomeView() {
             },
           }}
         >
-          {currentTeam?.name}
-          {activeProject?.name}
+          <Task id={1} />
         </Paper>
       </Box>
       <Snackbar

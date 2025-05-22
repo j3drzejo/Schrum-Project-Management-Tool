@@ -5,6 +5,14 @@ import { Repository } from 'typeorm';
 import { Board } from 'src/typeORM';
 import { UpdateBoardDto } from '../dtos';
 
+const STATUSES = [
+  'ready',
+  'in-progress',
+  'in-review',
+  'in-testing',
+  'ready-for-prod',
+] as const;
+
 @Injectable()
 export class BoardsService {
   constructor(@InjectRepository(Board) private boardRepo: Repository<Board>) {}
@@ -25,6 +33,18 @@ export class BoardsService {
     if (!board) {
       throw new NotFoundException(`Board #${boardId} not found`);
     }
+    return this.boardRepo.save(board);
+  }
+
+  async createForSprint(sprintId: number, name?: string): Promise<Board> {
+    const board = this.boardRepo.create({
+      name: name ?? `Sprint ${sprintId} Board`,
+      sprint: { id: sprintId },
+      columns: STATUSES.map((status, index) => ({
+        name: status,
+        position: index,
+      })),
+    });
     return this.boardRepo.save(board);
   }
 }
