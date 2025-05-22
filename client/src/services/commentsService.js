@@ -19,9 +19,12 @@ export const commentsService = {
   },
 
   updateComment: async (commentId, content) => {
+    console.log('Updating comment with ID:', commentId);
+    console.log('New content:', content);
     const { data } = await axiosInstance.put(`/comments/${commentId}`, {
       content,
     });
+    console.log(data);
     return data;
   },
 

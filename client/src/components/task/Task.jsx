@@ -241,8 +241,8 @@ export default function TaskCard({ id }) {
           backgroundColor: 'white',
           cursor: 'pointer',
           position: 'relative',
-          minHeight: '120px',
-          maxWidth: '350px',
+          minHeight: '100px',
+          maxWidth: '200px',
           transition: 'all 0.2s ease',
           border: '1px solid rgba(0,0,0,0.08)',
           '&:hover': {
@@ -350,7 +350,7 @@ export default function TaskCard({ id }) {
                 whiteSpace: 'nowrap',
               }}
             >
-              {assignedUser?.name || 'Unassigned'}
+              {assignedUser?.name}
             </Typography>
 
             {/* Comments count indicator */}
@@ -560,7 +560,7 @@ export default function TaskCard({ id }) {
                         {assignedUser?.name?.charAt(0) || '?'}
                       </Avatar>
                       <Typography variant="body2" fontWeight="medium">
-                        {assignedUser?.name || 'Unassigned'}
+                        {assignedUser?.name}
                       </Typography>
                     </Box>
                     <Button
@@ -882,9 +882,6 @@ export default function TaskCard({ id }) {
                 onChange={(e) => setSelectedUser(e.target.value)}
                 label="User"
               >
-                <MenuItem value="">
-                  <em>Unassigned</em>
-                </MenuItem>
                 {teamUsers.map((user) => (
                   <MenuItem key={user.id} value={user.id}>
                     <Box display="flex" alignItems="center">

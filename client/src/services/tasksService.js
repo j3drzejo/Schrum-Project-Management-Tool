@@ -56,6 +56,7 @@ export const tasksService = {
 
   getTaskLabels: async (taskId) => {
     const { data } = await axiosInstance.get(`/tasks/${taskId}/labels`);
+    console.log(data);
     return data;
   },
 

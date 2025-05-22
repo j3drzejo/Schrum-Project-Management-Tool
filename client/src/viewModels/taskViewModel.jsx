@@ -48,11 +48,15 @@ export function useTaskViewModel({ taskId }) {
         const historyData = await taskHistoryService.getTaskHistory(taskId);
         setHistory(historyData || []);
 
-        // Try to fetch labels using tasksService first, fallback to labelsService
         try {
-          // Use tasksService.getTaskLabels which calls /tasks/${taskId}/labels
-          const labelsData = await tasksService.getTaskLabels(taskId);
-          const validLabels = (labelsData || []).filter(
+          console.log('here');
+          const labelsData = await labelsService.getLabelsByTask(taskId);
+          console.log(labelsData);
+          console.log('here');
+
+          const validLabels = (
+            labelsData.map((taskLabel) => taskLabel.label) || []
+          ).filter(
             (label) => label && label.id && label.name && label.name.trim(),
           );
           setLabels(validLabels);
@@ -131,6 +135,7 @@ export function useTaskViewModel({ taskId }) {
   // Function to update a comment
   const updateComment = async (commentId, content) => {
     if (!commentId || !content.trim()) return;
+    console.log('Updating comment:', commentId, content);
 
     setSaving(true);
     setErrorMessage(null);
@@ -352,9 +357,7 @@ export function useTaskViewModel({ taskId }) {
     setErrorMessage(null);
 
     try {
-      // Try using tasksService first, then fallback to labelsService
       try {
-        // Use tasksService.deleteTaskLabel which calls /tasks/${taskId}/labels/${labelId}
         await tasksService.deleteTaskLabel(taskId, labelId);
       } catch (tasksServiceError) {
         console.warn(
