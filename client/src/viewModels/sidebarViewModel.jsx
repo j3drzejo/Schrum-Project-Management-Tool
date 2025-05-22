@@ -120,6 +120,8 @@ export function useSidebarViewModel() {
       const newTeam = await teamsService.createTeam(name);
       setTeams((prev) => [...prev, newTeam]);
       setCurrentTeam(newTeam);
+      setProjects([]);
+      setActiveProject(null);
     } catch (error) {
       console.error('Failed to create team:', error);
       setErrorMessage(error.message || 'An unexpected error occurred');

@@ -4,6 +4,7 @@ import { useSidebar } from '../../contexts/SidebarContext/useSidebar';
 import { Snackbar, Alert } from '@mui/material';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Task from '../../components/task/Task';
+import Board from '../../components/board/Board';
 
 export default function HomeView() {
   const { loading, errorMessage } = useSidebar();
@@ -42,7 +43,7 @@ export default function HomeView() {
             },
           }}
         >
-          <Task id={1} />
+          <Board />
         </Paper>
       </Box>
       <Snackbar

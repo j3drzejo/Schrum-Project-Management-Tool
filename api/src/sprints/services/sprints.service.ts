@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 
 import { Sprint, Project } from 'src/typeORM';
 import { CreateSprintDto, UpdateSprintDto } from '../dtos';
@@ -65,5 +65,24 @@ export class SprintsService {
       throw new NotFoundException(`Sprint #${id} not found`);
     }
     await this.sprintRepo.remove(sprint);
+  }
+
+  async getCurrentSprint(projectId: number): Promise<Sprint | null> {
+    const today = new Date().toISOString().split('T')[0];
+
+    const sprint = await this.sprintRepo.findOne({
+      where: {
+        project: { id: projectId },
+        startDate: LessThanOrEqual(today),
+        endDate: MoreThanOrEqual(today),
+      },
+      relations: ['project', 'board', 'board.columns'],
+    });
+
+    if (!sprint) {
+      return null;
+    }
+
+    return sprint;
   }
 }

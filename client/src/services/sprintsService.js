@@ -36,4 +36,11 @@ export const sprintsService = {
     const { data } = await axiosInstance.delete(`/sprints/${sprintId}`);
     return data;
   },
+
+  getSprintsByProject: async (projectId) => {
+    const { data } = await axiosInstance.get(
+      `/projects/${projectId}/sprints/current`,
+    );
+    return data;
+  },
 };

@@ -46,4 +46,9 @@ export class SprintsController {
   remove(@Param('sprintId', ParseIntPipe) sprintId: number) {
     return this.sprintsService.remove(sprintId);
   }
+
+  @Get('projects/:projectId/sprints/current')
+  getCurrentSprint(@Param('projectId', ParseIntPipe) projectId: number) {
+    return this.sprintsService.getCurrentSprint(projectId);
+  }
 }
