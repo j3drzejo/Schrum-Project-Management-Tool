@@ -117,6 +117,20 @@ function DroppableColumn({ column, tasks, onAddTask }) {
     [onAddTask, column.id],
   );
 
+  const columnName = (name) => {
+    if (name === 'ready') {
+      return 'Ready';
+    } else if (name === 'in-progress') {
+      return 'In Progress';
+    } else if (name === 'in-review') {
+      return 'In Review';
+    } else if (name === 'in-testing') {
+      return 'In Testing';
+    } else if (name === 'ready-for-prod') {
+      return 'In Prod';
+    }
+  };
+
   return (
     <Paper ref={setNodeRef} elevation={3} sx={columnStyles}>
       <Box
@@ -137,7 +151,7 @@ function DroppableColumn({ column, tasks, onAddTask }) {
             fontSize: '1rem',
           }}
         >
-          {column.name}
+          {columnName(column.name)}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography
