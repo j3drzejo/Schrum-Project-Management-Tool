@@ -1,3 +1,4 @@
+import { CreateLabelDto, UpdateLabelDto, AddLabelToTaskDto } from '../types';
 import { axiosInstance } from './apiClient';
 
 export const labelsService = {
@@ -6,40 +7,40 @@ export const labelsService = {
     return data;
   },
 
-  createLabel: async (name, color) => {
-    const { data } = await axiosInstance.post('/labels', { name, color });
+  createLabel: async (body: CreateLabelDto) => {
+    const { data } = await axiosInstance.post('/labels', body);
     return data;
   },
 
-  getLabelById: async (labelId) => {
+  getLabelById: async (labelId: number) => {
     const { data } = await axiosInstance.get(`/labels/${labelId}`);
     return data;
   },
 
-  updateLabel: async (labelId, updateData) => {
-    const { data } = await axiosInstance.put(`/labels/${labelId}`, updateData);
+  updateLabel: async (labelId: number, body: UpdateLabelDto) => {
+    const { data } = await axiosInstance.put(`/labels/${labelId}`, body);
     return data;
   },
 
-  deleteLabel: async (labelId) => {
+  deleteLabel: async (labelId: number) => {
     const { data } = await axiosInstance.delete(`/labels/${labelId}`);
     return data;
   },
 
-  getLabelsByTask: async (taskId) => {
+  getLabelsByTask: async (taskId: number) => {
     const { data } = await axiosInstance.get(`/labels/tasks/${taskId}/labels`);
     return data;
   },
 
-  addLabelToTask: async (taskId, labelData) => {
+  addLabelToTask: async (taskId: number, body: AddLabelToTaskDto) => {
     const { data } = await axiosInstance.post(
       `/labels/tasks/${taskId}/labels`,
-      labelData,
+      body,
     );
     return data;
   },
 
-  removeLabelFromTask: async (taskId, labelId) => {
+  removeLabelFromTask: async (taskId: number, labelId: number) => {
     const { data } = await axiosInstance.delete(
       `/labels/tasks/${taskId}/labels/${labelId}`,
     );

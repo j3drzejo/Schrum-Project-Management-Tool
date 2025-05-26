@@ -111,14 +111,16 @@ export function useTaskViewModel({ taskId }) {
   }, [taskId, refreshTrigger]);
 
   // Function to add a comment
-  const addComment = async (content) => {
+  const addComment = async (content: string) => {
     if (!taskId || !content.trim()) return;
 
     setSaving(true);
     setErrorMessage(null);
 
     try {
-      const newComment = await commentsService.createComment(taskId, content);
+      const newComment = await commentsService.createComment(taskId, {
+        content: content,
+      });
       setComments((prevComments) => [...prevComments, newComment]);
       setSuccessMessage('Comment added successfully');
       setCommentContent(''); // Clear the input field
@@ -133,7 +135,7 @@ export function useTaskViewModel({ taskId }) {
   };
 
   // Function to update a comment
-  const updateComment = async (commentId, content) => {
+  const updateComment = async (commentId: number, content: string) => {
     if (!commentId || !content.trim()) return;
     console.log('Updating comment:', commentId, content);
 
@@ -141,10 +143,10 @@ export function useTaskViewModel({ taskId }) {
     setErrorMessage(null);
 
     try {
-      const updatedComment = await commentsService.updateComment(
-        commentId,
-        content,
-      );
+      const updatedComment = await commentsService.updateComment(commentId, {
+        content: content,
+      });
+
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.id === commentId ? updatedComment : comment,
@@ -162,7 +164,7 @@ export function useTaskViewModel({ taskId }) {
   };
 
   // Function to delete a comment
-  const deleteComment = async (commentId) => {
+  const deleteComment = async (commentId: number) => {
     if (!commentId) return;
 
     setSaving(true);
@@ -301,7 +303,6 @@ export function useTaskViewModel({ taskId }) {
   const addLabel = async (labelData) => {
     if (!taskId) return;
 
-    // Validate label data
     const trimmedName = labelData.name?.trim();
     if (!trimmedName) {
       setErrorMessage('Label name cannot be empty');
@@ -312,9 +313,7 @@ export function useTaskViewModel({ taskId }) {
     setErrorMessage(null);
 
     try {
-      // Try using tasksService first, then fallback to labelsService
       try {
-        // Use tasksService.addTaskLabel which calls /tasks/${taskId}/labels
         const newLabel = await tasksService.addTaskLabel(taskId, {
           name: trimmedName,
           color: labelData.color,
@@ -329,10 +328,10 @@ export function useTaskViewModel({ taskId }) {
         );
 
         // Fallback to labelsService approach
-        const newLabel = await labelsService.createLabel(
-          trimmedName,
-          labelData.color,
-        );
+        const newLabel = await labelsService.createLabel({
+          name: trimmedName,
+          color: labelData.color,
+        });
 
         // Then attach the label to the task
         await labelsService.addLabelToTask(taskId, { labelId: newLabel.id });

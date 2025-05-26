@@ -35,7 +35,7 @@ export function useSidebarViewModel() {
       setLoading(true);
       try {
         const [userInfo, teamsData] = await Promise.all([
-          authService.validateUser(),
+          authService.validateUser(null),
           teamsService.getTeams(),
         ]);
         console.log('User Info:', userInfo);
@@ -100,11 +100,11 @@ export function useSidebarViewModel() {
     setUserResults([]);
   };
 
-  const inviteUser = async (email) => {
+  const inviteUser = async (email: string) => {
     if (!currentTeam?.id || !email) return;
     setInviteLoading(true);
     try {
-      await teamInvitesService.addUserToTeam(currentTeam.id, email);
+      await teamInvitesService.addUserToTeam(currentTeam.id, { email });
       closeInvite();
     } catch (error) {
       console.error('Failed to invite user:', error);
@@ -114,10 +114,10 @@ export function useSidebarViewModel() {
     }
   };
 
-  const createTeam = async (name) => {
+  const createTeam = async (name: string) => {
     try {
       setLoading(true);
-      const newTeam = await teamsService.createTeam(name);
+      const newTeam = await teamsService.createTeam({ name });
       setTeams((prev) => [...prev, newTeam]);
       setCurrentTeam(newTeam);
       setProjects([]);
@@ -130,14 +130,14 @@ export function useSidebarViewModel() {
     }
   };
 
-  const createProject = async (teamId, name) => {
+  const createProject = async (teamId: number, name: string) => {
     try {
       setLoading(true);
-      const newProject = await projectsService.createProject(
+      const newProject = await projectsService.createProject({
         name,
-        'New Team',
+        description: 'New Team',
         teamId,
-      );
+      });
       setProjects((prev) => [...prev, newProject]);
       setActiveProject(newProject);
     } catch (error) {
@@ -148,7 +148,7 @@ export function useSidebarViewModel() {
     }
   };
 
-  const acceptInvite = async (inviteId) => {
+  const acceptInvite = async (inviteId: number) => {
     try {
       setLoading(true);
       await teamInvitesService.acceptInvite(inviteId);
@@ -161,7 +161,7 @@ export function useSidebarViewModel() {
     }
   };
 
-  const declineInvite = async (inviteId) => {
+  const declineInvite = async (inviteId: number) => {
     try {
       setLoading(true);
       await teamInvitesService.declineInvite(inviteId);

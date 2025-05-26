@@ -7,6 +7,7 @@ import {
   teamsService,
 } from '../services';
 import { format, addDays } from 'date-fns';
+import { CreateTaskDto } from '../types';
 
 const DEFAULT_SPRINT_DURATION_DAYS = 14;
 
@@ -30,7 +31,7 @@ export function useBoardViewModel() {
   const [selectedColumnId, setSelectedColumnId] = useState(null);
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [taskAssigneeId, setTaskAssigneeId] = useState('');
+  const [taskAssigneeId, setTaskAssigneeId] = useState(0);
   const [teamUsers, setTeamUsers] = useState([]);
   const [createTaskLoading, setCreateTaskLoading] = useState(false);
 
@@ -114,11 +115,10 @@ export function useBoardViewModel() {
       setMovingTask(true);
 
       try {
-        await tasksService.moveTask(
-          taskId,
-          targetColumnId,
-          `Moved from ${sourceColumnId} to ${targetColumnId}`,
-        );
+        await tasksService.moveTask(taskId, {
+          columnId: targetColumnId,
+          note: `Moved from ${sourceColumnId} to ${targetColumnId}`,
+        });
 
         setTasks((prevTasks) =>
           prevTasks.map((task) =>
@@ -158,12 +158,11 @@ export function useBoardViewModel() {
     setCreateSprintLoading(true);
 
     try {
-      const newSprint = await sprintsService.createSprint(
-        activeProject.id,
-        sprintName.trim(),
-        sprintStartDate,
-        sprintEndDate,
-      );
+      const newSprint = await sprintsService.createSprint(activeProject.id, {
+        name: sprintName.trim(),
+        startDate: sprintStartDate,
+        endDate: sprintEndDate,
+      });
 
       setCurrentSprint(newSprint);
       setSprintDialogOpen(false);
@@ -173,7 +172,9 @@ export function useBoardViewModel() {
       setSuccessMessage('Sprint created successfully');
 
       const [boardData, tasksData] = await Promise.all([
-        boardsService.createForSprint(newSprint.id, sprintName.trim()),
+        boardsService.createForSprint(newSprint.id, {
+          name: sprintName.trim(),
+        }),
         tasksService.getTasksByProject(activeProject.id),
       ]);
 
@@ -217,12 +218,11 @@ export function useBoardViewModel() {
         ? tasks.filter((task) => task.boardColumn?.id === readyForProdColumn.id)
         : [];
 
-      await sprintsService.updateSprint(
-        currentSprint.id,
-        currentSprint.name,
-        currentSprint.startDate,
-        today,
-      );
+      await sprintsService.updateSprint(currentSprint.id, {
+        name: currentSprint.name,
+        startDate: currentSprint.startDate,
+        endDate: today,
+      });
 
       if (tasksToDelete.length > 0) {
         await Promise.all(
@@ -270,7 +270,7 @@ export function useBoardViewModel() {
     setSelectedColumnId(columnId);
     setTaskTitle('');
     setTaskDescription('');
-    setTaskAssigneeId('');
+    setTaskAssigneeId(0);
     setTaskDialogOpen(true);
   }, []);
 
@@ -279,7 +279,7 @@ export function useBoardViewModel() {
     setSelectedColumnId(null);
     setTaskTitle('');
     setTaskDescription('');
-    setTaskAssigneeId('');
+    setTaskAssigneeId(0);
   }, []);
 
   const handleCreateTask = useCallback(async () => {
@@ -291,7 +291,7 @@ export function useBoardViewModel() {
     setCreateTaskLoading(true);
 
     try {
-      const taskData = {
+      const taskData: CreateTaskDto = {
         title: taskTitle.trim(),
         description: taskDescription.trim(),
         projectId: activeProject.id,

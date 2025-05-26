@@ -1,4 +1,5 @@
 import { axiosInstance } from './apiClient';
+import { CreateTeamDto, UpdateTeamDto } from '../types';
 
 export const teamsService = {
   getTeams: async () => {
@@ -6,8 +7,8 @@ export const teamsService = {
     return data;
   },
 
-  createTeam: async (name) => {
-    const { data } = await axiosInstance.post('/teams', { name });
+  createTeam: async (body: CreateTeamDto) => {
+    const { data } = await axiosInstance.post('/teams', body);
     return data;
   },
 
@@ -16,17 +17,17 @@ export const teamsService = {
     return data;
   },
 
-  getTeamById: async (id) => {
+  getTeamById: async (id: number) => {
     const { data } = await axiosInstance.get(`/teams/${id}`);
     return data;
   },
 
-  updateTeam: async (id, name) => {
-    const { data } = await axiosInstance.put(`/teams/${id}`, { name });
+  updateTeam: async (id: number, body: UpdateTeamDto) => {
+    const { data } = await axiosInstance.put(`/teams/${id}`, body);
     return data;
   },
 
-  deleteTeam: async (id) => {
+  deleteTeam: async (id: number) => {
     const { data } = await axiosInstance.delete(`/teams/${id}`);
     return data;
   },

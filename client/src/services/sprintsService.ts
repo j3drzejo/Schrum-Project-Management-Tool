@@ -1,3 +1,4 @@
+import { CreateSprintDto, UpdateSprintDto } from '../types';
 import { axiosInstance } from './apiClient';
 
 export const sprintsService = {
@@ -6,38 +7,30 @@ export const sprintsService = {
     return data;
   },
 
-  createSprint: async (projectId, name, startDate, endDate) => {
+  createSprint: async (projectId: number, body: CreateSprintDto) => {
     const { data } = await axiosInstance.post(
       `/projects/${projectId}/sprints`,
-      {
-        name,
-        startDate,
-        endDate,
-      },
+      body,
     );
     return data;
   },
 
-  getSprintById: async (sprintId) => {
+  getSprintById: async (sprintId: number) => {
     const { data } = await axiosInstance.get(`/sprints/${sprintId}`);
     return data;
   },
 
-  updateSprint: async (sprintId, name, startDate, endDate) => {
-    const { data } = await axiosInstance.put(`/sprints/${sprintId}`, {
-      name,
-      startDate,
-      endDate,
-    });
+  updateSprint: async (sprintId: number, body: UpdateSprintDto) => {
+    const { data } = await axiosInstance.put(`/sprints/${sprintId}`, body);
     return data;
   },
 
-  deleteSprint: async (sprintId) => {
+  deleteSprint: async (sprintId: number) => {
     const { data } = await axiosInstance.delete(`/sprints/${sprintId}`);
     return data;
   },
 
-  getSprintsByProject: async (projectId) => {
+  getSprintsByProject: async (projectId: number) => {
     const { data } = await axiosInstance.get(
       `/projects/${projectId}/sprints/current`,
     );

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext/useAuth';
 import { authService } from '../services';
+import { LoginDto, RegisterDto } from '../types';
 
 export function useAuthViewModel() {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ export function useAuthViewModel() {
     }
   };
 
-  const loginUser = async (formData) => {
+  const loginUser = async (formData: LoginDto) => {
     setLocalLoading(true);
     setLocalError(null);
     setError(null);
@@ -69,7 +70,7 @@ export function useAuthViewModel() {
     }
   };
 
-  const registerUser = async (formData) => {
+  const registerUser = async (formData: RegisterDto) => {
     setLocalLoading(true);
     setLocalError(null);
     setError(null);
