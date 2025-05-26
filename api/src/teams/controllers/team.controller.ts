@@ -9,16 +9,12 @@ import {
   Req,
 } from '@nestjs/common';
 import { TeamService } from '../services/team.service';
-import { TeamInviteService } from '../services/team-invite.service';
 import { CreateTeamDto, UpdateTeamDto } from '../dtos';
 import { AuthenticatedRequest } from 'src/types';
 
 @Controller('teams')
 export class TeamController {
-  constructor(
-    private readonly teamService: TeamService,
-    private readonly teamInviteService: TeamInviteService,
-  ) {}
+  constructor(private readonly teamService: TeamService) {}
 
   @Get()
   async findAll(@Req() req: AuthenticatedRequest) {
