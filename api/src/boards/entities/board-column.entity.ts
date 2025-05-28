@@ -23,7 +23,10 @@ export class BoardColumn {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Board, (board) => board.columns)
+  @ManyToOne(() => Board, (board) => board.columns, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   board: Board;
 
   @Column()

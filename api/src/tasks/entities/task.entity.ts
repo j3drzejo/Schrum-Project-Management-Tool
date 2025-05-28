@@ -28,19 +28,36 @@ export class Task {
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @ManyToOne(() => Project, (project) => project.tasks)
+  @ManyToOne(() => Project, (project) => project.tasks, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   project: Project;
 
-  @ManyToOne(() => Sprint, (sprint) => sprint.tasks, { nullable: true })
+  @ManyToOne(() => Sprint, (sprint) => sprint.tasks, {
+    nullable: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   sprint?: Sprint;
 
-  @ManyToOne(() => BoardColumn)
+  @ManyToOne(() => BoardColumn, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   boardColumn: BoardColumn;
 
-  @ManyToOne(() => User, (user) => user.assignedTasks, { nullable: true })
+  @ManyToOne(() => User, (user) => user.assignedTasks, {
+    nullable: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   assignedUser?: User;
 
-  @ManyToOne(() => User, (user) => user.createdTasks)
+  @ManyToOne(() => User, (user) => user.createdTasks, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   createdBy: User;
 
   @CreateDateColumn({ type: 'datetime' })
@@ -49,12 +66,21 @@ export class Task {
   @UpdateDateColumn({ type: 'datetime' })
   updatedAt: Date;
 
-  @OneToMany(() => Comment, (comment) => comment.task)
+  @OneToMany(() => Comment, (comment) => comment.task, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
 
-  @OneToMany(() => TaskHistory, (history) => history.task)
+  @OneToMany(() => TaskHistory, (history) => history.task, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   history: TaskHistory[];
 
-  @OneToMany(() => TaskLabel, (tl) => tl.task)
+  @OneToMany(() => TaskLabel, (tl) => tl.task, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   labels: TaskLabel[];
 }

@@ -12,6 +12,9 @@ export class Label {
   @Column()
   color: string;
 
-  @OneToMany(() => TaskLabel, (tl: TaskLabel) => tl.label)
+  @OneToMany(() => TaskLabel, (tl: TaskLabel) => tl.label, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   taskLinks: TaskLabel[];
 }

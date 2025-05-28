@@ -13,7 +13,10 @@ export class AccessToken {
   @PrimaryGeneratedColumn('uuid')
   jti: string;
 
-  @ManyToOne(() => User, (user) => user.accessTokens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.accessTokens, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column()

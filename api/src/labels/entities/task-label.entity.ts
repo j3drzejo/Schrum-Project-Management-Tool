@@ -9,11 +9,19 @@ export class TaskLabel {
   @PrimaryColumn()
   labelId: number;
 
-  @ManyToOne(() => Task, (task) => task.labels, { eager: false })
+  @ManyToOne(() => Task, (task) => task.labels, {
+    eager: false,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'taskId' })
   task: Task;
 
-  @ManyToOne(() => Label, (label) => label.taskLinks, { eager: false })
+  @ManyToOne(() => Label, (label) => label.taskLinks, {
+    eager: false,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'labelId' })
   label: Label;
 }

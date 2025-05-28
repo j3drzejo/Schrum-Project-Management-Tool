@@ -23,13 +23,22 @@ export class Sprint {
   @Column()
   endDate: string;
 
-  @ManyToOne(() => Project, (project) => project.sprints)
+  @ManyToOne(() => Project, (project) => project.sprints, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   project: Project;
 
-  @OneToOne(() => Board, (board) => board.sprint, { cascade: true })
+  @OneToOne(() => Board, (board) => board.sprint, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   board: Board;
 
-  @OneToMany(() => Task, (task) => task.sprint)
+  @OneToMany(() => Task, (task) => task.sprint, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   tasks: Task[];
 }

@@ -18,12 +18,21 @@ export class Team {
   @Column({ nullable: true, type: 'text' })
   description?: string;
 
-  @ManyToMany(() => User, (user) => user.teams)
+  @ManyToMany(() => User, (user) => user.teams, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   users: User[];
 
-  @OneToMany(() => Project, (project) => project.team)
+  @OneToMany(() => Project, (project) => project.team, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   projects: Project[];
 
-  @OneToMany(() => TeamInvite, (invite) => invite.team)
+  @OneToMany(() => TeamInvite, (invite) => invite.team, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   invites: TeamInvite[];
 }
