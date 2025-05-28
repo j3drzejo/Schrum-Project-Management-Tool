@@ -11,6 +11,7 @@ import { LabelsModule } from './labels/labels.module';
 import { CommentsModule } from './comments/comments.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { AdminModule } from './admin/admin.module';
 import * as path from 'path';
 import entities from './typeORM';
 @Module({
@@ -35,6 +36,7 @@ import entities from './typeORM';
     LabelsModule,
     CommentsModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],

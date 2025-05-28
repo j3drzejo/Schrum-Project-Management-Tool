@@ -53,4 +53,7 @@ export class User {
 
   @OneToMany(() => TeamInvite, (invite) => invite.invitedBy)
   sentInvites: TeamInvite[];
+
+  @Column({ default: false })
+  isAdmin?: boolean;
 }

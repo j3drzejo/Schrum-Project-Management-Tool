@@ -5,5 +5,6 @@ export class AuthenticatedRequest extends Request {
     userId: number;
     email: string;
     jti: string;
+    isAdmin: boolean;
   };
 }
