@@ -41,7 +41,7 @@ import {
   CreateTeamInviteAdminDto,
   UpdateTeamInviteAdminDto,
   CreateTaskLabelAdminDto,
-} from './admin.controller';
+} from './dtos';
 
 @Injectable()
 export class AdminService {
