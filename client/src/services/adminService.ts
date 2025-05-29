@@ -1,170 +1,36 @@
 import { axiosInstance } from './apiClient';
-
-// DTOs
-export interface CreateUserDto {
-  name: string;
-  email: string;
-  password: string;
-  isAdmin?: boolean;
-}
-
-export interface UpdateUserDto {
-  name?: string;
-  email?: string;
-  password?: string;
-  isAdmin?: boolean;
-}
-
-export interface CreateTeamDto {
-  name: string;
-  description?: string;
-}
-
-export interface UpdateTeamDto {
-  name?: string;
-  description?: string;
-}
-
-export interface CreateProjectDto {
-  name: string;
-  description?: string;
-  teamId: number;
-}
-
-export interface UpdateProjectDto {
-  name?: string;
-  description?: string;
-  teamId?: number;
-}
-
-export interface CreateSprintDto {
-  name: string;
-  startDate: string;
-  endDate: string;
-  projectId: number;
-}
-
-export interface UpdateSprintDto {
-  name?: string;
-  startDate?: string;
-  endDate?: string;
-  projectId?: number;
-}
-
-export interface CreateBoardDto {
-  name: string;
-  sprintId: number;
-}
-
-export interface UpdateBoardDto {
-  name?: string;
-  sprintId?: number;
-}
-
-export interface CreateBoardColumnDto {
-  name: 'ready' | 'in-progress' | 'in-review' | 'in-testing' | 'ready-for-prod';
-  position: number;
-  boardId: number;
-}
-
-export interface UpdateBoardColumnDto {
-  name?:
-    | 'ready'
-    | 'in-progress'
-    | 'in-review'
-    | 'in-testing'
-    | 'ready-for-prod';
-  position?: number;
-  boardId?: number;
-}
-
-export interface CreateTaskDto {
-  title: string;
-  description?: string;
-  projectId: number;
-  sprintId?: number;
-  boardColumnId: number;
-  assignedUserId?: number;
-  createdById: number;
-}
-
-export interface UpdateTaskDto {
-  title?: string;
-  description?: string;
-  projectId?: number;
-  sprintId?: number;
-  boardColumnId?: number;
-  assignedUserId?: number;
-  createdById?: number;
-}
-
-export interface CreateLabelDto {
-  name: string;
-  color: string;
-}
-
-export interface UpdateLabelDto {
-  name?: string;
-  color?: string;
-}
-
-export interface CreateCommentDto {
-  content: string;
-  taskId: number;
-  authorId: number;
-}
-
-export interface UpdateCommentDto {
-  content?: string;
-  taskId?: number;
-  authorId?: number;
-}
-
-export interface CreateTeamInviteDto {
-  teamId: number;
-  invitedUserId: number;
-  invitedById: number;
-  accepted?: boolean;
-}
-
-export interface UpdateTeamInviteDto {
-  teamId?: number;
-  invitedUserId?: number;
-  invitedById?: number;
-  accepted?: boolean;
-}
-
-export interface CreateTaskLabelDto {
-  taskId: number;
-  labelId: number;
-}
-
-// Response interfaces
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-}
-
-export interface SystemStats {
-  users: number;
-  teams: number;
-  projects: number;
-  sprints: number;
-  tasks: number;
-  comments: number;
-  labels: number;
-}
+import {
+  PaginatedResponse,
+  CreateUserDto,
+  UpdateUserDto,
+  CreateTeamDto,
+  UpdateTeamDto,
+  CreateProjectDto,
+  UpdateProjectDto,
+  CreateSprintDto,
+  UpdateSprintDto,
+  CreateBoardDto,
+  UpdateBoardDto,
+  CreateBoardColumnDto,
+  UpdateBoardColumnDto,
+  CreateTaskDto,
+  UpdateTaskDto,
+  UpdateLabelDto,
+  CreateCommentDto,
+  UpdateCommentDto,
+  CreateLabelDto,
+  CreateTeamInviteDto,
+  UpdateTeamInviteDto,
+  CreateTaskLabelDto,
+  SystemStats,
+} from '../types/dtos/admin.types.dto';
 
 export const adminService = {
-  // Check admin status
   isAdmin: async (): Promise<boolean> => {
     const { data } = await axiosInstance.get('/admin/');
     return data;
   },
 
-  // User Management
   getAllUsers: async (
     page = 1,
     limit = 10,
@@ -196,7 +62,6 @@ export const adminService = {
     return data;
   },
 
-  // Team Management
   getAllTeams: async (
     page = 1,
     limit = 10,
@@ -228,7 +93,6 @@ export const adminService = {
     return data;
   },
 
-  // Project Management
   getAllProjects: async (
     page = 1,
     limit = 10,
@@ -262,7 +126,6 @@ export const adminService = {
     return data;
   },
 
-  // Sprint Management
   getAllSprints: async (
     page = 1,
     limit = 10,
@@ -296,7 +159,6 @@ export const adminService = {
     return data;
   },
 
-  // Board Management
   getAllBoards: async (
     page = 1,
     limit = 10,
@@ -327,7 +189,6 @@ export const adminService = {
     return data;
   },
 
-  // Board Column Management
   getAllBoardColumns: async (
     page = 1,
     limit = 10,
@@ -364,7 +225,6 @@ export const adminService = {
     return data;
   },
 
-  // Task Management
   getAllTasks: async (
     page = 1,
     limit = 10,
@@ -395,7 +255,6 @@ export const adminService = {
     return data;
   },
 
-  // Label Management
   getAllLabels: async (
     page = 1,
     limit = 10,
@@ -426,7 +285,6 @@ export const adminService = {
     return data;
   },
 
-  // Comment Management
   getAllComments: async (
     page = 1,
     limit = 10,
@@ -460,7 +318,6 @@ export const adminService = {
     return data;
   },
 
-  // Team Invite Management
   getAllTeamInvites: async (
     page = 1,
     limit = 10,
@@ -497,7 +354,6 @@ export const adminService = {
     return data;
   },
 
-  // Task Label Management
   getAllTaskLabels: async (
     page = 1,
     limit = 10,
@@ -530,7 +386,6 @@ export const adminService = {
     return data;
   },
 
-  // System Statistics
   getSystemStats: async (): Promise<SystemStats> => {
     const { data } = await axiosInstance.get('/admin/stats');
     return data;

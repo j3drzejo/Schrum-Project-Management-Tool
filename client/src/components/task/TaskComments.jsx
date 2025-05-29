@@ -39,23 +39,19 @@ export default function TaskComments({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editCommentContent, setEditCommentContent] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [editingCommentId, setEditingCommentId] = useState(null); // Separate state for editing
-  const [deletingCommentId, setDeletingCommentId] = useState(null); // Separate state for deleting
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [deletingCommentId, setDeletingCommentId] = useState(null);
 
-  // Handle opening the comment options menu
   const handleMenuOpen = (event, commentId) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedCommentId(commentId);
   };
 
-  // Handle closing the comment options menu
   const handleMenuClose = () => {
     setAnchorEl(null);
-    // Don't reset selectedCommentId here to preserve it for dialogs
   };
 
-  // Handle opening the edit comment dialog
   const handleEditOpen = () => {
     const comment = comments.find((c) => c.id === selectedCommentId);
     if (comment) {
@@ -66,15 +62,13 @@ export default function TaskComments({
     handleMenuClose();
   };
 
-  // Handle closing the edit comment dialog
   const handleEditClose = () => {
     setEditDialogOpen(false);
     setEditCommentContent('');
     setEditingCommentId(null);
-    setSelectedCommentId(null); // Reset here after dialog closes
+    setSelectedCommentId(null);
   };
 
-  // Handle saving the edited comment
   const handleEditSave = async () => {
     if (editCommentContent.trim() && editingCommentId) {
       console.log('Saving edited comment:', editCommentContent);
@@ -84,21 +78,18 @@ export default function TaskComments({
     }
   };
 
-  // Handle opening the delete comment dialog
   const handleDeleteOpen = () => {
     setDeletingCommentId(selectedCommentId);
     setDeleteDialogOpen(true);
     handleMenuClose();
   };
 
-  // Handle closing the delete comment dialog
   const handleDeleteClose = () => {
     setDeleteDialogOpen(false);
     setDeletingCommentId(null);
-    setSelectedCommentId(null); // Reset here after dialog closes
+    setSelectedCommentId(null);
   };
 
-  // Handle confirming comment deletion
   const handleDeleteConfirm = async () => {
     if (deletingCommentId) {
       await onDeleteComment(deletingCommentId);
@@ -106,14 +97,12 @@ export default function TaskComments({
     }
   };
 
-  // Handle submitting a new comment
   const handleSubmitComment = async () => {
     if (commentContent.trim()) {
       await onAddComment(commentContent);
     }
   };
 
-  // Enable pressing Enter key to submit a comment
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -132,7 +121,6 @@ export default function TaskComments({
         Comments
       </Typography>
 
-      {/* Comments List */}
       <Paper
         elevation={0}
         sx={{
@@ -241,7 +229,6 @@ export default function TaskComments({
         )}
       </Paper>
 
-      {/* Add Comment Form */}
       <Box sx={{ display: 'flex', mt: 2 }}>
         <TextField
           fullWidth
@@ -287,7 +274,6 @@ export default function TaskComments({
         </Button>
       </Box>
 
-      {/* Comment Options Menu */}
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -312,7 +298,6 @@ export default function TaskComments({
         </MenuItem>
       </Menu>
 
-      {/* Edit Comment Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditClose} fullWidth>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Edit Comment
@@ -346,7 +331,6 @@ export default function TaskComments({
         </DialogActions>
       </Dialog>
 
-      {/* Delete Comment Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Delete Comment

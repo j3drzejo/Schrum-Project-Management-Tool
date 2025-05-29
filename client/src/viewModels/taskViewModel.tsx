@@ -2,7 +2,7 @@ import { useSidebar } from '../contexts/SidebarContext/useSidebar';
 import { tasksService } from '../services';
 import { taskHistoryService } from '../services';
 import { labelsService } from '../services';
-import { commentsService } from '../services'; // Import the commentsService
+import { commentsService } from '../services';
 import { useEffect, useState } from 'react';
 
 export function useTaskViewModel({ taskId }) {
@@ -17,7 +17,7 @@ export function useTaskViewModel({ taskId }) {
   const [updatedAt, setUpdatedAt] = useState('');
   const [history, setHistory] = useState([]);
   const [labels, setLabels] = useState([]);
-  const [comments, setComments] = useState([]); // State for comments
+  const [comments, setComments] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,8 +25,8 @@ export function useTaskViewModel({ taskId }) {
   const [successMessage, setSuccessMessage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [commentsLoading, setCommentsLoading] = useState(false); // Loading state for comments
-  const [commentContent, setCommentContent] = useState(''); // State for new comment content
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentContent, setCommentContent] = useState('');
 
   useEffect(() => {
     async function fetchTask() {
@@ -66,7 +66,6 @@ export function useTaskViewModel({ taskId }) {
             labelsError,
           );
           try {
-            // Fallback to labelsService
             const labelsData = await labelsService.getLabelsByTask(taskId);
             const validLabels = (labelsData || []).filter(
               (label) => label && label.id && label.name && label.name.trim(),
@@ -81,7 +80,6 @@ export function useTaskViewModel({ taskId }) {
           }
         }
 
-        // Fetch comments for this task - moved inside to fix dependency issue
         await fetchCommentsData();
       } catch (error) {
         console.error('Error fetching task data:', error);
@@ -91,7 +89,6 @@ export function useTaskViewModel({ taskId }) {
       }
     }
 
-    // Function to fetch comments - defined inside useEffect to avoid dependency issues
     async function fetchCommentsData() {
       if (!taskId) return;
 
@@ -101,7 +98,6 @@ export function useTaskViewModel({ taskId }) {
         setComments(commentsData || []);
       } catch (error) {
         console.error('Error fetching comments:', error);
-        // Don't set error message here to avoid disrupting the main task view
       } finally {
         setCommentsLoading(false);
       }
@@ -110,7 +106,6 @@ export function useTaskViewModel({ taskId }) {
     fetchTask();
   }, [taskId, refreshTrigger]);
 
-  // Function to add a comment
   const addComment = async (content: string) => {
     if (!taskId || !content.trim()) return;
 
@@ -134,7 +129,6 @@ export function useTaskViewModel({ taskId }) {
     }
   };
 
-  // Function to update a comment
   const updateComment = async (commentId: number, content: string) => {
     if (!commentId || !content.trim()) return;
     console.log('Updating comment:', commentId, content);
@@ -163,7 +157,6 @@ export function useTaskViewModel({ taskId }) {
     }
   };
 
-  // Function to delete a comment
   const deleteComment = async (commentId: number) => {
     if (!commentId) return;
 
@@ -238,7 +231,7 @@ export function useTaskViewModel({ taskId }) {
     setErrorMessage(null);
 
     try {
-      const updatedTask = await tasksService.moveTask(taskId, columnId, note);
+      const updatedTask = await tasksService.moveTask(taskId, columnId);
       setBoardColumn(updatedTask.boardColumn);
       setTask(updatedTask);
       setUpdatedAt(updatedTask.updatedAt);
@@ -327,13 +320,11 @@ export function useTaskViewModel({ taskId }) {
           tasksServiceError,
         );
 
-        // Fallback to labelsService approach
         const newLabel = await labelsService.createLabel({
           name: trimmedName,
           color: labelData.color,
         });
 
-        // Then attach the label to the task
         await labelsService.addLabelToTask(taskId, { labelId: newLabel.id });
 
         setLabels((prev) => [...prev, newLabel]);
@@ -363,7 +354,6 @@ export function useTaskViewModel({ taskId }) {
           'Failed to remove label via tasksService, trying labelsService:',
           tasksServiceError,
         );
-        // Fallback to labelsService
         await labelsService.removeLabelFromTask(taskId, labelId);
       }
 
@@ -402,7 +392,6 @@ export function useTaskViewModel({ taskId }) {
     setRefreshTrigger((prev) => prev + 1);
   };
 
-  // Utility function to clean up blank labels
   const cleanupBlankLabels = async () => {
     const blankLabels = labels.filter(
       (label) => !label.name || !label.name.trim(),
@@ -430,10 +419,10 @@ export function useTaskViewModel({ taskId }) {
     updatedAt,
     history,
     labels,
-    comments, // Expose comments state
-    commentsLoading, // Expose comments loading state
-    commentContent, // Expose comment content state
-    setCommentContent, // Expose function to set comment content
+    comments,
+    commentsLoading,
+    commentContent,
+    setCommentContent,
 
     loading,
     saving,
@@ -450,10 +439,10 @@ export function useTaskViewModel({ taskId }) {
     removeLabel,
     createTask,
     refreshTask,
-    addComment, // Expose function to add comments
-    updateComment, // Expose function to update comments
-    deleteComment, // Expose function to delete comments
-    cleanupBlankLabels, // Expose function to cleanup blank labels
+    addComment,
+    updateComment,
+    deleteComment,
+    cleanupBlankLabels,
 
     setTitle,
     setDescription,

@@ -39,7 +39,7 @@ import {
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { teamsService } from '../../services/teamsService';
-import TaskComments from './TaskComments'; // Import the TaskComments component
+import TaskComments from './TaskComments';
 
 export default function TaskCard({ id }) {
   const {
@@ -53,10 +53,10 @@ export default function TaskCard({ id }) {
     updatedAt,
     history,
     labels,
-    comments, // Get comments from the view model
-    commentsLoading, // Get comments loading state
-    commentContent, // Get comment content
-    setCommentContent, // Get comment content setter
+    comments,
+    commentsLoading,
+    commentContent,
+    setCommentContent,
     loading,
     saving,
     errorMessage,
@@ -67,9 +67,9 @@ export default function TaskCard({ id }) {
     deleteTask,
     addLabel,
     removeLabel,
-    addComment, // Get add comment function
-    updateComment, // Get update comment function
-    deleteComment, // Get delete comment function
+    addComment,
+    updateComment,
+    deleteComment,
     setTitle,
     setDescription,
   } = useTaskViewModel({
@@ -85,14 +85,12 @@ export default function TaskCard({ id }) {
   const [teamUsers, setTeamUsers] = useState([]);
   const [newLabel, setNewLabel] = useState({ name: '', color: '#F4A7B9' });
   const [usersLoading, setUsersLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState(0); // For tabs (Activity/Comments)
+  const [activeTab, setActiveTab] = useState(0);
 
-  // Open the details dialog
   const handleOpenDetails = () => {
     setDetailsOpen(true);
   };
 
-  // Close the details dialog
   const handleCloseDetails = () => {
     setDetailsOpen(false);
   };
@@ -118,7 +116,6 @@ export default function TaskCard({ id }) {
   const handleAssignOpen = () => {
     setAssignDialogOpen(true);
 
-    // Fetch team users when assign dialog opens
     const fetchTeamUsers = async () => {
       if (!currentTeam?.id) return;
 
@@ -127,7 +124,6 @@ export default function TaskCard({ id }) {
         const teamData = await teamsService.getTeamById(currentTeam.id);
         setTeamUsers(teamData.users || []);
 
-        // Set selected user if task is already assigned
         if (assignedUser) {
           setSelectedUser(assignedUser.id);
         }
@@ -162,7 +158,6 @@ export default function TaskCard({ id }) {
   const handleLabelSave = async () => {
     const trimmedLabelName = newLabel.name.trim();
     if (trimmedLabelName) {
-      // Check if label with same name already exists to prevent duplicates
       const existingLabel = labels.find(
         (label) =>
           label.name &&
@@ -170,7 +165,6 @@ export default function TaskCard({ id }) {
       );
 
       if (existingLabel) {
-        // Could show an error message here if needed
         console.warn('Label with this name already exists');
         return;
       }
@@ -193,7 +187,7 @@ export default function TaskCard({ id }) {
     const deleted = await deleteTask();
     if (deleted) {
       setDeleteDialogOpen(false);
-      setDetailsOpen(false); // Close details dialog if task is deleted
+      setDetailsOpen(false);
     }
   };
 
@@ -201,12 +195,10 @@ export default function TaskCard({ id }) {
     await removeLabel(labelId);
   };
 
-  // Handle tab change between Activity and Comments
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
-  // Stop event propagation for actions inside the card
   const handleActionClick = (e) => {
     e.stopPropagation();
   };
@@ -231,7 +223,6 @@ export default function TaskCard({ id }) {
 
   return (
     <>
-      {/* Task Card (Compact View) */}
       <Paper
         elevation={2}
         onClick={handleOpenDetails}
@@ -252,7 +243,6 @@ export default function TaskCard({ id }) {
           },
         }}
       >
-        {/* Title truncated */}
         <Typography
           variant="subtitle1"
           fontWeight="bold"
@@ -270,7 +260,6 @@ export default function TaskCard({ id }) {
           {task.title}
         </Typography>
 
-        {/* Labels (show max 2) */}
         <Box
           sx={{
             display: 'flex',
@@ -282,11 +271,11 @@ export default function TaskCard({ id }) {
           }}
         >
           {labels
-            .filter((label) => label && label.name && label.name.trim()) // Filter out blank labels
+            .filter((label) => label && label.name && label.name.trim())
             .slice(0, 2)
             .map((label) => (
               <Chip
-                key={`compact-label-${label.id}-${label.name}`} // Unique key
+                key={`compact-label-${label.id}-${label.name}`}
                 label={label.name}
                 size="small"
                 sx={{
@@ -319,7 +308,6 @@ export default function TaskCard({ id }) {
           )}
         </Box>
 
-        {/* Footer with assigned user, comments count, and action button */}
         <Box
           sx={{
             display: 'flex',
@@ -353,7 +341,6 @@ export default function TaskCard({ id }) {
               {assignedUser?.name}
             </Typography>
 
-            {/* Comments count indicator */}
             {comments && comments.length > 0 && (
               <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
                 <CommentIcon
@@ -395,7 +382,6 @@ export default function TaskCard({ id }) {
         </Box>
       </Paper>
 
-      {/* Task Details Dialog */}
       <Dialog
         open={detailsOpen}
         onClose={handleCloseDetails}
@@ -471,7 +457,6 @@ export default function TaskCard({ id }) {
               {task.title}
             </Typography>
 
-            {/* Status/Board Column */}
             {boardColumn && (
               <Box mb={2}>
                 <Chip
@@ -487,7 +472,6 @@ export default function TaskCard({ id }) {
             )}
           </Box>
 
-          {/* Description */}
           <Box sx={{ px: 3, mb: 3 }}>
             <Typography
               variant="subtitle2"
@@ -512,7 +496,6 @@ export default function TaskCard({ id }) {
             </Box>
           </Box>
 
-          {/* Two-column layout for details */}
           <Box sx={{ px: 3 }}>
             <Box
               sx={{
@@ -521,9 +504,7 @@ export default function TaskCard({ id }) {
                 gap: 3,
               }}
             >
-              {/* Left column */}
               <Box sx={{ flex: 1 }}>
-                {/* Assigned User */}
                 <Box mb={3}>
                   <Typography
                     variant="subtitle2"
@@ -586,7 +567,6 @@ export default function TaskCard({ id }) {
                   </Box>
                 </Box>
 
-                {/* Labels */}
                 <Box mb={3}>
                   <Typography
                     variant="subtitle2"
@@ -601,10 +581,10 @@ export default function TaskCard({ id }) {
                       labels
                         .filter(
                           (label) => label && label.name && label.name.trim(),
-                        ) // Filter out blank labels
+                        )
                         .map((label) => (
                           <Chip
-                            key={`label-${label.id}-${label.name}`} // Unique key with fallback
+                            key={`label-${label.id}-${label.name}`}
                             label={label.name}
                             sx={{
                               backgroundColor: label.color || '#F4A7B9',
@@ -649,7 +629,6 @@ export default function TaskCard({ id }) {
                   </Button>
                 </Box>
 
-                {/* Created/Updated timestamps */}
                 <Box>
                   <Typography
                     variant="subtitle2"
@@ -676,7 +655,6 @@ export default function TaskCard({ id }) {
                 </Box>
               </Box>
 
-              {/* Right column - Activity and Comments with Tabs */}
               <Box sx={{ flex: 1 }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
                   <Tabs
@@ -709,9 +687,7 @@ export default function TaskCard({ id }) {
                   </Tabs>
                 </Box>
 
-                {/* Tab Content */}
                 {activeTab === 0 && (
-                  // Activity History Tab
                   <Box>
                     <Box
                       sx={{
@@ -727,7 +703,7 @@ export default function TaskCard({ id }) {
                           <Box
                             key={`history-${item.id || index}-${
                               item.timestamp || index
-                            }`} // Better unique key
+                            }`}
                             sx={{
                               mb: 1,
                               pb: 1,
@@ -784,7 +760,6 @@ export default function TaskCard({ id }) {
                 )}
 
                 {activeTab === 1 && (
-                  // Comments Tab
                   <TaskComments
                     comments={comments}
                     loading={commentsLoading}
@@ -819,7 +794,6 @@ export default function TaskCard({ id }) {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onClose={handleEditClose} fullWidth>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Edit Task
@@ -862,7 +836,6 @@ export default function TaskCard({ id }) {
         </DialogActions>
       </Dialog>
 
-      {/* Assign User Dialog */}
       <Dialog open={assignDialogOpen} onClose={handleAssignClose} fullWidth>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Assign Task
@@ -922,7 +895,6 @@ export default function TaskCard({ id }) {
         </DialogActions>
       </Dialog>
 
-      {/* Add Label Dialog */}
       <Dialog open={labelDialogOpen} onClose={handleLabelClose} fullWidth>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Add Label
@@ -990,7 +962,6 @@ export default function TaskCard({ id }) {
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleDeleteClose}>
         <DialogTitle sx={{ color: '#F4A7B9', fontWeight: 'bold' }}>
           Delete Task
@@ -1014,7 +985,6 @@ export default function TaskCard({ id }) {
         </DialogActions>
       </Dialog>
 
-      {/* Success/Error Snackbars */}
       <Snackbar
         open={!!successMessage}
         autoHideDuration={3000}
