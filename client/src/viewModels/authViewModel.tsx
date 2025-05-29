@@ -17,7 +17,6 @@ export function useAuthViewModel() {
     setError,
     setUser,
     getToken,
-    isAdmin,
   } = useAuth();
 
   const [localLoading, setLocalLoading] = useState(false);
@@ -108,12 +107,14 @@ export function useAuthViewModel() {
 
   const checkAdmin = async () => {
     setLoading(true);
+    let adm;
     try {
-      await adminService.isAdmin();
+      adm = await adminService.isAdmin();
     } catch (err) {
       console.error('Logout error:', err);
     } finally {
       setLocalLoading(false);
+      return adm;
     }
   };
 
@@ -126,6 +127,5 @@ export function useAuthViewModel() {
     loading: isLoading || localLoading,
     error: error || localError,
     checkAdmin,
-    isAdmin,
   };
 }

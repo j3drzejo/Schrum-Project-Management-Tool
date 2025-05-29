@@ -32,6 +32,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Token revoked or expired');
     }
 
-    return { userId: token.user.id, email: token.user.email, jti: token.jti };
+    return {
+      userId: token.user.id,
+      email: token.user.email,
+      jti: token.jti,
+      isAdmin: token.user.isAdmin, // Add isAdmin field to the returned user object
+    };
   }
 }

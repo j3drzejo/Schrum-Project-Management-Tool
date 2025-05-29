@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   IsString,
@@ -21,7 +22,7 @@ import {
 } from 'class-validator';
 import { AuthenticatedRequest } from 'src/types';
 import { AdminService } from './admin.service';
-import { Public } from 'src/auth/public.decorator';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 export class CreateUserAdminDto {
   @IsString()
@@ -321,7 +322,7 @@ export class CreateTaskLabelAdminDto {
   labelId: number;
 }
 
-@Public()
+@UseGuards(AdminGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

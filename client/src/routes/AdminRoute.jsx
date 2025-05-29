@@ -4,15 +4,15 @@ import { useAuthViewModel } from '../viewmodels/authViewModel';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const AdminRoute = ({ children }) => {
-  const { isAuthenticated, validateToken, checkAdmin, isAdmin } =
-    useAuthViewModel();
+  const { isAuthenticated, validateToken, checkAdmin } = useAuthViewModel();
   const [checking, setChecking] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await validateToken();
-        await checkAdmin();
+        setIsAdmin(await checkAdmin());
       } catch (error) {
         console.error('Error during auth checks:', error);
       } finally {
@@ -28,7 +28,7 @@ const AdminRoute = ({ children }) => {
 
   if (!isAuthenticated || !isAdmin) {
     console.log('Redirecting due to failed auth or admin check');
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

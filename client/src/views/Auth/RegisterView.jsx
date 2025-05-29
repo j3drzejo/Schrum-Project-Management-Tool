@@ -158,7 +158,7 @@ export default function RegisterView() {
 
   useEffect(() => {
     if (error) {
-      if (error.toLowerCase().includes('email')) {
+      if (error.includes('email')) {
         setFormErrors((prev) => ({ ...prev, email: error }));
         setActiveStep(0);
       }
