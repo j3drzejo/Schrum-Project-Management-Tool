@@ -11,7 +11,6 @@ export class TaskLabel {
 
   @ManyToOne(() => Task, (task) => task.labels, {
     eager: false,
-    cascade: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'taskId' })
@@ -19,7 +18,6 @@ export class TaskLabel {
 
   @ManyToOne(() => Label, (label) => label.taskLinks, {
     eager: false,
-    cascade: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'labelId' })

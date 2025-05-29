@@ -7,6 +7,7 @@ import UnprotectedRoute from './routes/UnprotectedRoute';
 import { SidebarProvider } from './contexts/SidebarContext/SidebarProvider';
 import { AuthProvider } from './contexts/AuthContext/AuthProvider';
 import AdminDashboard from './views/admin/Admin';
+import AdminRoute from './routes/AdminRoute';
 
 function App() {
   return (
@@ -43,7 +44,14 @@ function App() {
           />
 
           <Route path="*" element={<div>Page not found</div>} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </AuthProvider>
     </Router>

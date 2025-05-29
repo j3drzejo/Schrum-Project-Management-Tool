@@ -328,7 +328,7 @@ export class AdminController {
 
   @Get('/')
   isAdmin(@Req() req: AuthenticatedRequest) {
-    return req.user.isAdmin;
+    return req.user?.isAdmin;
   }
 
   // User Management

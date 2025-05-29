@@ -29,53 +29,31 @@ export class User {
   @Column()
   password: string;
 
-  @ManyToMany(() => Team, (team: Team) => team.users, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(() => Team, (team: Team) => team.users)
   @JoinTable()
   teams: Team[];
 
-  @OneToMany(() => Task, (task) => task.assignedUser, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Task, (task) => task.assignedUser)
   assignedTasks: Task[];
 
-  @OneToMany(() => Task, (task) => task.createdBy, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Task, (task) => task.createdBy)
   createdTasks: Task[];
 
-  @OneToMany(() => Comment, (comment) => comment.author, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Comment, (comment) => comment.author)
   comments: Comment[];
 
-  @OneToMany(() => TaskHistory, (history) => history.user, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => TaskHistory, (history) => history.user)
   histories: TaskHistory[];
 
   @OneToMany(() => AccessToken, (a) => a.user, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   accessTokens: AccessToken[];
 
-  @OneToMany(() => TeamInvite, (invite) => invite.invitedUser, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => TeamInvite, (invite) => invite.invitedUser)
   invites: TeamInvite[];
 
-  @OneToMany(() => TeamInvite, (invite) => invite.invitedBy, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => TeamInvite, (invite) => invite.invitedBy)
   sentInvites: TeamInvite[];
 
   @Column({ default: false })

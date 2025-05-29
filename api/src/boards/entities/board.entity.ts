@@ -13,7 +13,6 @@ export class Board {
   id: number;
 
   @OneToOne(() => Sprint, (sprint) => sprint.board, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   sprint: Sprint;
@@ -23,7 +22,6 @@ export class Board {
 
   @OneToMany(() => BoardColumn, (col: BoardColumn) => col.board, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   columns: BoardColumn[];
 }

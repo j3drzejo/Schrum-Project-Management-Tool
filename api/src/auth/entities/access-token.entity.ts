@@ -14,7 +14,6 @@ export class AccessToken {
   jti: string;
 
   @ManyToOne(() => User, (user) => user.accessTokens, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   user: User;

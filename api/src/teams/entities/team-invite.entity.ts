@@ -6,13 +6,22 @@ export class TeamInvite {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Team, { eager: true, cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Team, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   team: Team;
 
-  @ManyToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   invitedUser: User;
 
-  @ManyToOne(() => User, { eager: true, cascade: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   invitedBy: User;
 
   @Column({ default: false })

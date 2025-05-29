@@ -13,29 +13,27 @@ export class TaskHistory {
   id: number;
 
   @ManyToOne(() => Task, (task) => task.history, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   task: Task;
 
   @ManyToOne(() => User, (user) => user.histories, {
-    cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
+    onDelete: 'SET NULL',
   })
-  user: User;
+  user?: User;
 
   @ManyToOne(() => BoardColumn, {
     nullable: true,
-    cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   fromColumn?: BoardColumn;
 
   @ManyToOne(() => BoardColumn, {
-    cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
+    onDelete: 'SET NULL',
   })
-  toColumn: BoardColumn;
+  toColumn?: BoardColumn;
 
   @CreateDateColumn({ type: 'datetime' })
   timestamp: Date;

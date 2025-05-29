@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext/useAuth';
 import { authService } from '../services';
 import { LoginDto, RegisterDto } from '../types';
+import { adminService } from '../services/adminService';
 
 export function useAuthViewModel() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export function useAuthViewModel() {
     setError,
     setUser,
     getToken,
+    isAdmin,
   } = useAuth();
 
   const [localLoading, setLocalLoading] = useState(false);
@@ -104,6 +106,17 @@ export function useAuthViewModel() {
     }
   };
 
+  const checkAdmin = async () => {
+    setLoading(true);
+    try {
+      await adminService.isAdmin();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setLocalLoading(false);
+    }
+  };
+
   return {
     loginUser,
     registerUser,
@@ -112,5 +125,7 @@ export function useAuthViewModel() {
     isAuthenticated,
     loading: isLoading || localLoading,
     error: error || localError,
+    checkAdmin,
+    isAdmin,
   };
 }

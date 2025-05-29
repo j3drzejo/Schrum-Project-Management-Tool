@@ -24,7 +24,6 @@ export class BoardColumn {
   id: number;
 
   @ManyToOne(() => Board, (board) => board.columns, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   board: Board;

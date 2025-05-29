@@ -29,36 +29,32 @@ export class Task {
   description?: string;
 
   @ManyToOne(() => Project, (project) => project.tasks, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   project: Project;
 
   @ManyToOne(() => Sprint, (sprint) => sprint.tasks, {
     nullable: true,
-    cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   sprint?: Sprint;
 
   @ManyToOne(() => BoardColumn, {
-    cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'RESTRICT',
   })
   boardColumn: BoardColumn;
 
   @ManyToOne(() => User, (user) => user.assignedTasks, {
     nullable: true,
-    cascade: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   assignedUser?: User;
 
   @ManyToOne(() => User, (user) => user.createdTasks, {
-    cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
+    onDelete: 'SET NULL',
   })
-  createdBy: User;
+  createdBy?: User;
 
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
@@ -68,19 +64,16 @@ export class Task {
 
   @OneToMany(() => Comment, (comment) => comment.task, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   comments: Comment[];
 
   @OneToMany(() => TaskHistory, (history) => history.task, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   history: TaskHistory[];
 
   @OneToMany(() => TaskLabel, (tl) => tl.task, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   labels: TaskLabel[];
 }

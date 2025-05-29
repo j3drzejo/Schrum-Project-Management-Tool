@@ -14,7 +14,6 @@ export class Label {
 
   @OneToMany(() => TaskLabel, (tl: TaskLabel) => tl.label, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   taskLinks: TaskLabel[];
 }

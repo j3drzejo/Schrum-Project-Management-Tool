@@ -29,12 +29,9 @@ const AdminDashboard = () => {
     { id: 'projects', label: 'Projects' },
     { id: 'sprints', label: 'Sprints' },
     { id: 'boards', label: 'Boards' },
-    { id: 'board-columns', label: 'Board Columns' },
     { id: 'tasks', label: 'Tasks' },
     { id: 'labels', label: 'Labels' },
     { id: 'comments', label: 'Comments' },
-    { id: 'team-invites', label: 'Team Invites' },
-    { id: 'task-labels', label: 'Task Labels' },
   ];
 
   const loadStats = async () => {
@@ -43,6 +40,8 @@ const AdminDashboard = () => {
       const statsData = await adminService.getSystemStats();
       setStats(statsData);
     } catch (err) {
+      console.error(err);
+
       setError('Failed to load statistics');
     } finally {
       setLoading(false);
@@ -114,6 +113,7 @@ const AdminDashboard = () => {
       setTotal(responseTotal);
       setPage(responsePage);
     } catch (err) {
+      console.error(err);
       setError(`Failed to load ${tabId}`);
       setData([]);
     } finally {
@@ -191,6 +191,8 @@ const AdminDashboard = () => {
 
       loadData(activeTab, page);
     } catch (err) {
+      console.error(err);
+
       setError('Failed to delete item');
     } finally {
       setLoading(false);
@@ -277,6 +279,8 @@ const AdminDashboard = () => {
       closeModal();
       loadData(activeTab, page);
     } catch (err) {
+      console.error(err);
+
       setError('Failed to save item');
     } finally {
       setLoading(false);
@@ -505,6 +509,204 @@ const AdminDashboard = () => {
                 value={formData.color || '#000000'}
                 onChange={(e) =>
                   setFormData({ ...formData, color: e.target.value })
+                }
+                required
+              />
+            </div>
+          </>
+        );
+
+      case 'boards':
+        return (
+          <>
+            <div>
+              <label className="block text-sm font-medium mb-1">Name</label>
+              <input
+                type="text"
+                className={commonInputClass}
+                value={formData.name || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Sprint ID
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.sprintId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    sprintId: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+          </>
+        );
+
+      case 'tasks':
+        return (
+          <>
+            <div>
+              <label className="block text-sm font-medium mb-1">Title</label>
+              <input
+                type="text"
+                className={commonInputClass}
+                value={formData.title || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Description
+              </label>
+              <textarea
+                className={commonInputClass}
+                value={formData.description || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                rows="3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Project ID
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.projectId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    projectId: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Sprint ID (Optional)
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.sprintId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    sprintId: e.target.value ? parseInt(e.target.value) : null,
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Board Column ID
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.boardColumnId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    boardColumnId: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Assigned User ID (Optional)
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.assignedUserId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    assignedUserId: e.target.value
+                      ? parseInt(e.target.value)
+                      : null,
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Created By User ID
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.createdById || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    createdById: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+          </>
+        );
+
+      case 'comments':
+        return (
+          <>
+            <div>
+              <label className="block text-sm font-medium mb-1">Content</label>
+              <textarea
+                className={commonInputClass}
+                value={formData.content || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, content: e.target.value })
+                }
+                required
+                rows="4"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Task ID</label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.taskId || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, taskId: parseInt(e.target.value) })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Author ID
+              </label>
+              <input
+                type="number"
+                className={commonInputClass}
+                value={formData.authorId || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    authorId: parseInt(e.target.value),
+                  })
                 }
                 required
               />

@@ -15,15 +15,14 @@ export class Comment {
   id: number;
 
   @ManyToOne(() => Task, (task) => task.comments, {
-    cascade: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'taskId' })
   task: Task;
 
   @ManyToOne(() => User, (user) => user.comments, {
-    cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'authorId' })
   author: User;
