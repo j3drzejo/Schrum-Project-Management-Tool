@@ -40,7 +40,37 @@ import {
 } from '@mui/icons-material';
 import { useAdminViewModel } from '../../viewModels/adminViewModel';
 
-const AdminDashboard = () => {
+interface TabConfig {
+  id: string;
+  label: string;
+  icon?: React.ComponentType<any>;
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+}
+
+interface Team {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+interface Label {
+  id: number;
+  name: string;
+  color: string;
+}
+
+interface GenericItem {
+  id: number;
+  [key: string]: any;
+}
+
+const AdminDashboard: React.FC = () => {
   const {
     activeTab,
     loading,
@@ -63,7 +93,7 @@ const AdminDashboard = () => {
     setError,
   } = useAdminViewModel();
 
-  const tabs = [
+  const tabs: TabConfig[] = [
     { id: 'stats', label: 'Statistics', icon: BarChartIcon },
     { id: 'users', label: 'Users' },
     { id: 'teams', label: 'Teams' },
@@ -75,12 +105,12 @@ const AdminDashboard = () => {
     { id: 'comments', label: 'Comments' },
   ];
 
-  const renderFormFields = () => {
+  const renderFormFields = (): React.ReactNode => {
     switch (activeTab) {
       case 'users':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -89,7 +119,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Email"
@@ -100,7 +130,7 @@ const AdminDashboard = () => {
               />
             </Grid>
             {modalMode === 'create' && (
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   fullWidth
                   label="Password"
@@ -111,7 +141,7 @@ const AdminDashboard = () => {
                 />
               </Grid>
             )}
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -130,7 +160,7 @@ const AdminDashboard = () => {
       case 'teams':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -139,7 +169,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Description"
@@ -155,7 +185,7 @@ const AdminDashboard = () => {
       case 'projects':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -164,7 +194,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Description"
@@ -174,14 +204,17 @@ const AdminDashboard = () => {
                 onChange={(e) => updateFormData('description', e.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Team ID"
                 type="number"
                 value={formData.teamId || ''}
                 onChange={(e) =>
-                  updateFormData('teamId', parseInt(e.target.value))
+                  updateFormData(
+                    'teamId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
@@ -192,7 +225,7 @@ const AdminDashboard = () => {
       case 'sprints':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -201,7 +234,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Start Date"
@@ -212,7 +245,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="End Date"
@@ -223,14 +256,17 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Project ID"
                 type="number"
                 value={formData.projectId || ''}
                 onChange={(e) =>
-                  updateFormData('projectId', parseInt(e.target.value))
+                  updateFormData(
+                    'projectId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
@@ -241,7 +277,7 @@ const AdminDashboard = () => {
       case 'labels':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -250,7 +286,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Color"
@@ -266,7 +302,7 @@ const AdminDashboard = () => {
       case 'boards':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Name"
@@ -275,14 +311,17 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Sprint ID"
                 type="number"
                 value={formData.sprintId || ''}
                 onChange={(e) =>
-                  updateFormData('sprintId', parseInt(e.target.value))
+                  updateFormData(
+                    'sprintId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
@@ -293,7 +332,7 @@ const AdminDashboard = () => {
       case 'tasks':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Title"
@@ -302,7 +341,7 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Description"
@@ -312,19 +351,22 @@ const AdminDashboard = () => {
                 onChange={(e) => updateFormData('description', e.target.value)}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Project ID"
                 type="number"
                 value={formData.projectId || ''}
                 onChange={(e) =>
-                  updateFormData('projectId', parseInt(e.target.value))
+                  updateFormData(
+                    'projectId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Sprint ID (Optional)"
@@ -333,24 +375,27 @@ const AdminDashboard = () => {
                 onChange={(e) =>
                   updateFormData(
                     'sprintId',
-                    e.target.value ? parseInt(e.target.value) : null,
+                    e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Board Column ID"
                 type="number"
                 value={formData.boardColumnId || ''}
                 onChange={(e) =>
-                  updateFormData('boardColumnId', parseInt(e.target.value))
+                  updateFormData(
+                    'boardColumnId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Assigned User ID (Optional)"
@@ -359,19 +404,22 @@ const AdminDashboard = () => {
                 onChange={(e) =>
                   updateFormData(
                     'assignedUserId',
-                    e.target.value ? parseInt(e.target.value) : null,
+                    e.target.value ? parseInt(e.target.value) : undefined,
                   )
                 }
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Created By User ID"
                 type="number"
                 value={formData.createdById || ''}
                 onChange={(e) =>
-                  updateFormData('createdById', parseInt(e.target.value))
+                  updateFormData(
+                    'createdById',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
@@ -382,7 +430,7 @@ const AdminDashboard = () => {
       case 'comments':
         return (
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <TextField
                 fullWidth
                 label="Content"
@@ -393,26 +441,32 @@ const AdminDashboard = () => {
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Task ID"
                 type="number"
                 value={formData.taskId || ''}
                 onChange={(e) =>
-                  updateFormData('taskId', parseInt(e.target.value))
+                  updateFormData(
+                    'taskId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={{ xs: 6 }}>
               <TextField
                 fullWidth
                 label="Author ID"
                 type="number"
                 value={formData.authorId || ''}
                 onChange={(e) =>
-                  updateFormData('authorId', parseInt(e.target.value))
+                  updateFormData(
+                    'authorId',
+                    parseInt(e.target.value) || undefined,
+                  )
                 }
                 required
               />
@@ -430,7 +484,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const renderTableHeader = () => {
+  const renderTableHeader = (): React.ReactNode => {
     switch (activeTab) {
       case 'users':
         return (
@@ -471,7 +525,10 @@ const AdminDashboard = () => {
     }
   };
 
-  const renderTableRow = (item, index) => {
+  const renderTableRow = (
+    item: GenericItem,
+    index: number,
+  ): React.ReactNode => {
     const actionButtons = (
       <Box>
         <IconButton
@@ -500,15 +557,16 @@ const AdminDashboard = () => {
 
     switch (activeTab) {
       case 'users':
+        const user = item as User;
         return (
-          <TableRow key={item.id || index}>
-            <TableCell>{item.id}</TableCell>
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.email}</TableCell>
+          <TableRow key={user.id || index}>
+            <TableCell>{user.id}</TableCell>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
             <TableCell>
               <Chip
-                label={item.isAdmin ? 'Yes' : 'No'}
-                color={item.isAdmin ? 'success' : 'default'}
+                label={user.isAdmin ? 'Yes' : 'No'}
+                color={user.isAdmin ? 'success' : 'default'}
                 size="small"
               />
             </TableCell>
@@ -516,19 +574,21 @@ const AdminDashboard = () => {
           </TableRow>
         );
       case 'teams':
+        const team = item as Team;
         return (
-          <TableRow key={item.id || index}>
-            <TableCell>{item.id}</TableCell>
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.description}</TableCell>
+          <TableRow key={team.id || index}>
+            <TableCell>{team.id}</TableCell>
+            <TableCell>{team.name}</TableCell>
+            <TableCell>{team.description}</TableCell>
             <TableCell>{actionButtons}</TableCell>
           </TableRow>
         );
       case 'labels':
+        const label = item as Label;
         return (
-          <TableRow key={item.id || index}>
-            <TableCell>{item.id}</TableCell>
-            <TableCell>{item.name}</TableCell>
+          <TableRow key={label.id || index}>
+            <TableCell>{label.id}</TableCell>
+            <TableCell>{label.name}</TableCell>
             <TableCell>
               <Box display="flex" alignItems="center">
                 <Box
@@ -537,9 +597,9 @@ const AdminDashboard = () => {
                   borderRadius="50%"
                   mr={1}
                   border="1px solid #ccc"
-                  style={{ backgroundColor: item.color }}
+                  style={{ backgroundColor: label.color }}
                 />
-                {item.color}
+                {label.color}
               </Box>
             </TableCell>
             <TableCell>{actionButtons}</TableCell>
@@ -560,6 +620,20 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleTabChangeWrapper = (
+    event: React.SyntheticEvent,
+    newValue: string,
+  ): void => {
+    handleTabChange(newValue as any);
+  };
+
+  const handlePageChangeWrapper = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number,
+  ): void => {
+    handlePageChange(newPage);
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       <AppBar position="static" color="default" elevation={1}>
@@ -574,7 +648,7 @@ const AdminDashboard = () => {
         <Paper sx={{ mb: 4 }}>
           <Tabs
             value={activeTab}
-            onChange={(e, newValue) => handleTabChange(newValue)}
+            onChange={handleTabChangeWrapper}
             variant="scrollable"
             scrollButtons="auto"
           >
@@ -606,7 +680,7 @@ const AdminDashboard = () => {
           <Grid container spacing={3}>
             {stats &&
               Object.entries(stats).map(([key, value]) => (
-                <Grid item xs={12} sm={6} md={3} key={key}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={key}>
                   <Card>
                     <CardContent>
                       <Box display="flex" alignItems="center">
@@ -672,7 +746,7 @@ const AdminDashboard = () => {
                     <Pagination
                       count={totalPages}
                       page={page}
-                      onChange={(e, newPage) => handlePageChange(newPage)}
+                      onChange={handlePageChangeWrapper}
                       color="primary"
                     />
                   </Box>
